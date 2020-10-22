@@ -14,5 +14,5 @@ In pdebase.py classes for the solution of the previous problems via neural netwo
 - N-dimensional neural network with varying boundary data.
 One subnetwork works on the boundary data and one on the inner domain: the subnetwokrs are dense neural networks with tanh activation and output dimensionality 256; at each neuron the sum of square error (SSE) is minimised.
 
-Run problem1.py, problem2.py, problem3.py and problemN.py to get the solution and display the approxiamtion errors (SSE, ).
+Run problem1.py, problem2.py, problem3.py and problemN.py to get the solution and display the approxiamtion errors.
 Before running the problems, create in your directory folders named "p1", "p2", "p3", "pN" respleively, where the graphs will be saved.
