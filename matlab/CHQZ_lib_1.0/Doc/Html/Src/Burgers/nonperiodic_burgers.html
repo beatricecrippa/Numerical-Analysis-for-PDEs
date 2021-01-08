@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of nonperiodic_burgers</title>
+  <meta name="keywords" content="nonperiodic_burgers">
+  <meta name="description" content="NONPERIODIC_BURGERS Numerical solution of non periodic Burgers equation">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Burgers</a> &gt; nonperiodic_burgers.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Burgers&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>nonperiodic_burgers
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>NONPERIODIC_BURGERS Numerical solution of non periodic Burgers equation</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [u,err]=nonperiodic_burgers(xa,xb,t0,T,visc,nx,deltat,tscheme,bc) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> NONPERIODIC_BURGERS Numerical solution of non periodic Burgers equation
+      
+  \partial u/\partial t +u \partial u/\partial x -\nu \partial^2 u/\partial x^2
+                 =0     in Omega, \forall t&gt;t_0
+  u(x,t_0)=u_0(x)    in Omega
+  + b.c.
+
+     Exact solution is given by formula (3.1.8), pag. 119, CHQZ2
+     Space discretization: Galerkin-Numerical Integration with LGL
+     formulas.
+     Time discretization:  Explicit Euler, RK2, RK4
+
+  [u,err]=nonperiodic_burgers(xa,xb,t0,T,visc,nx,deltat,tscheme,bc)
+
+ Input: xa,xb  = extrema of space domain Omega=(xa,xb)
+        t0,T   = extrema of time domain [t0,T]
+        visc   = viscosity
+        nx     = spectral polynomial degree, the number of LGL points is
+                 nx+1
+        deltat = time step
+        tscheme= time discretization scheme: 1=EE, 2=RK2, 3=RK4
+        bc     = choice of boundary conditions: 1 == Dirichlet 
+                                                2 == Neumann 
+
+ Output: u = solution at final time T
+         err= L_\infty norm error between numerical and exact solution at
+         final time T
+
+
+ Possible input data:
+ xa=-1;xb=1;
+ visc=0.01;
+ tscheme=4;bc=1;
+ nx=16;
+ t0=0;T=1;
+ deltat=1.e-4;
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="ee.html" class="code" title="function [u1]=ee(tt,deltat,f,u0,dx,A,w,visc,uex,uex1,bc);">ee</a>	EE One step of  Explicit Euler scheme for 1D parabolic problems.</li><li><a href="fburgers.html" class="code" title="function [f]=fburgers(tt,deltat,u0,A,dx,w,visc,uex,uex1,bc);">fburgers</a>	FBURGERS Defines the non-per Burgers function for nonperiodic_burgers.m</li><li><a href="rk2.html" class="code" title="function [u1]=rk2(t,deltat,f,u0,dx,A,w,visc,uex,uex1,bc);">rk2</a>	RK2 One step of  Explicit Runge-Kutta second order scheme.</li><li><a href="rk4.html" class="code" title="function [u1]=rk4(tt,deltat,f,u0,dx,A,w,visc,uex,uex1,cb);">rk4</a>	RK4 One step of  Explicit Runge-Kutta fourth order scheme.</li><li><a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>	DERLGL      Spectral (Legendre Gauss Lobatto) derivative matrix</li><li><a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>	XWLGL Computes nodes and weights of the Legendre-Gauss-Lobatto quadrature formula.</li><li><a href="../../Src/Level_1/stiff_1d_sp.html" class="code" title="function [A]=stiff_1d_sp(w,d,jac)">stiff_1d_sp</a>	STIFF_1D_SP    Computes local stiffness matrix for 1D problem</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="call_npbur.html" class="code" title="">call_npbur</a>	CALL_NPBUR Script to set input and to call nonperiodic_burgers.m</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [u,err]=nonperiodic_burgers(xa,xb,t0,T,visc,nx,deltat,tscheme,bc)</a>
+0002 <span class="comment">% NONPERIODIC_BURGERS Numerical solution of non periodic Burgers equation</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  \partial u/\partial t +u \partial u/\partial x -\nu \partial^2 u/\partial x^2</span>
+0005 <span class="comment">%                 =0     in Omega, \forall t&gt;t_0</span>
+0006 <span class="comment">%  u(x,t_0)=u_0(x)    in Omega</span>
+0007 <span class="comment">%  + b.c.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%     Exact solution is given by formula (3.1.8), pag. 119, CHQZ2</span>
+0010 <span class="comment">%     Space discretization: Galerkin-Numerical Integration with LGL</span>
+0011 <span class="comment">%     formulas.</span>
+0012 <span class="comment">%     Time discretization:  Explicit Euler, RK2, RK4</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%  [u,err]=nonperiodic_burgers(xa,xb,t0,T,visc,nx,deltat,tscheme,bc)</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Input: xa,xb  = extrema of space domain Omega=(xa,xb)</span>
+0017 <span class="comment">%        t0,T   = extrema of time domain [t0,T]</span>
+0018 <span class="comment">%        visc   = viscosity</span>
+0019 <span class="comment">%        nx     = spectral polynomial degree, the number of LGL points is</span>
+0020 <span class="comment">%                 nx+1</span>
+0021 <span class="comment">%        deltat = time step</span>
+0022 <span class="comment">%        tscheme= time discretization scheme: 1=EE, 2=RK2, 3=RK4</span>
+0023 <span class="comment">%        bc     = choice of boundary conditions: 1 == Dirichlet</span>
+0024 <span class="comment">%                                                2 == Neumann</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Output: u = solution at final time T</span>
+0027 <span class="comment">%         err= L_\infty norm error between numerical and exact solution at</span>
+0028 <span class="comment">%         final time T</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Possible input data:</span>
+0032 <span class="comment">% xa=-1;xb=1;</span>
+0033 <span class="comment">% visc=0.01;</span>
+0034 <span class="comment">% tscheme=4;bc=1;</span>
+0035 <span class="comment">% nx=16;</span>
+0036 <span class="comment">% t0=0;T=1;</span>
+0037 <span class="comment">% deltat=1.e-4;</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0040 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0041 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0042 
+0043 <span class="comment">%   Written by Paola Gervasio</span>
+0044 <span class="comment">%   $Date: 2007/04/01$</span>
+0045 
+0046 
+0047 <span class="comment">%  Definition of exact solution and first derivative to set Neumann b.c</span>
+0048  
+0049 Uex=[<span class="string">'1+(x-t)/(t+1).*(4/sqrt(t+1)*exp(-(x-t).^2/(0.04*(t+1))))'</span>,<span class="keyword">...</span>
+0050     <span class="string">'./(1+4/sqrt(t+1)*exp(-(x-t).^2/(0.04*(t+1))))'</span>];
+0051 Uex1=[<span class="string">'-4*(50*(t+1)^(1/2)*t^2-100*x*t*(t+1)^(1/2)-4*exp(-25*(x-t)^2/(t+1))*t'</span>,<span class="keyword">...</span>
+0052 <span class="string">'+50*x^2*(t+1)^(1/2)-(t+1)^(1/2)*t-(t+1)^(1/2)-4*exp(-25*(x-t)^2/(t+1)))'</span>,<span class="keyword">...</span>
+0053     <span class="string">'*exp(-25*(x-t)^2/(t+1))/((t+1)^(1/2)+4*exp(-25*(x-t)^2/(t+1)))^2/(t+1)^2'</span>];
+0054 uex=vectorize(Uex);
+0055 uex1=vectorize(Uex1);
+0056 uex=@(x,t)[eval(uex)];
+0057 uex1=@(x,t)[eval(uex1)];
+0058 
+0059 
+0060 
+0061 <span class="comment">% space discretization</span>
+0062 
+0063 npdx=nx+1; 
+0064 [x,w]=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdx); 
+0065 dx=<a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>(x,npdx);
+0066 jac=(xb-xa)*5.d-1;
+0067 x=x*jac+(xb+xa)*5.d-1;
+0068 A=<a href="../../Src/Level_1/stiff_1d_sp.html" class="code" title="function [A]=stiff_1d_sp(w,d,jac)">stiff_1d_sp</a>(w,dx,jac);
+0069 A=visc*A;
+0070 
+0071 t=t0;
+0072 u0=uex(x,t);
+0073 
+0074 fig=figure(<span class="keyword">...</span>
+0075     <span class="string">'Name'</span>,<span class="string">'Non periodic Burgers solution'</span>,<span class="keyword">...</span>
+0076     <span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0077 title([<span class="string">'t='</span>,num2str(t)]);
+0078 <span class="comment">%U1=uex(x);</span>
+0079 <span class="comment">%plot(x,u0,x,U1,'r',x,zeros(npdx,1),'+');</span>
+0080 <span class="comment">%pause(0.001)</span>
+0081 k=0;
+0082 
+0083 <span class="comment">% time loop</span>
+0084 
+0085 <span class="keyword">while</span> t&lt; T
+0086 <span class="keyword">if</span> tscheme==1
+0087     <span class="comment">% Explicit Euler in time</span>
+0088 u=<a href="ee.html" class="code" title="function [u1]=ee(tt,deltat,f,u0,dx,A,w,visc,uex,uex1,bc);">ee</a>(t,deltat,@<a href="fburgers.html" class="code" title="function [f]=fburgers(tt,deltat,u0,A,dx,w,visc,uex,uex1,bc);">fburgers</a>,u0,dx,A,w,visc,uex,uex1,bc);
+0089 <span class="keyword">elseif</span> tscheme==2
+0090     <span class="comment">% RK2 in time</span>
+0091 u=<a href="rk2.html" class="code" title="function [u1]=rk2(t,deltat,f,u0,dx,A,w,visc,uex,uex1,bc);">rk2</a>(t,deltat,@<a href="fburgers.html" class="code" title="function [f]=fburgers(tt,deltat,u0,A,dx,w,visc,uex,uex1,bc);">fburgers</a>,u0,dx,A,w,visc,uex,uex1,bc);
+0092 <span class="keyword">elseif</span> tscheme==4
+0093     <span class="comment">% RK4 in time</span>
+0094 u=<a href="rk4.html" class="code" title="function [u1]=rk4(tt,deltat,f,u0,dx,A,w,visc,uex,uex1,cb);">rk4</a>(t,deltat,@<a href="fburgers.html" class="code" title="function [f]=fburgers(tt,deltat,u0,A,dx,w,visc,uex,uex1,bc);">fburgers</a>,u0,dx,A,w,visc,uex,uex1,bc);
+0095 <span class="keyword">end</span>
+0096 t=t+deltat;
+0097 k=k+1;
+0098 U1=uex(x,t);
+0099 <span class="comment">% if rem(k,100)==0</span>
+0100 <span class="comment">% err=norm(u(1:nx)-U1(1:nx),inf);</span>
+0101 <span class="comment">% fprintf('t=%13.6e, nx=%d, err_inf=%13.6e, tscheme=%d \n ',t,nx, err,tscheme)</span>
+0102 <span class="comment">% end</span>
+0103 plot(x,u,x,U1,<span class="string">'r'</span>,x,ones(npdx,1),<span class="string">'+'</span>);
+0104 axis([-1,1,0.8,1.2])
+0105 title([<span class="string">'t='</span>,num2str(t)]);
+0106 pause(0.001)
+0107 u0=u; 
+0108 <span class="keyword">if</span> (sum(isnan(u))&gt;1)
+0109     fprintf(<span class="string">'Nan solution: instability due to too large time-step'</span>)
+0110     err=100;
+0111     <span class="keyword">return</span>
+0112 <span class="keyword">end</span>
+0113 <span class="comment">% end time loop</span>
+0114 <span class="keyword">end</span>
+0115 U1=uex(x,t);
+0116 err=norm(u(1:nx)-U1(1:nx),inf);
+0117 fprintf(<span class="string">'t=%13.6e, nx=%d, err_inf=%13.6e, tscheme=%d \n '</span>,t,nx, err,tscheme)
+0118 
+0119 
+0120 <span class="comment">%U1=uex(x,t);</span>
+0121 <span class="comment">%err=norm(u(1:nx)-U1(1:nx),inf);</span>
+0122 <span class="comment">%disp('N, error')</span>
+0123 <span class="comment">%[nx, err]</span>
+0124 plot(x,u,x,U1,<span class="string">'r'</span>,x,ones(npdx,1),<span class="string">'+'</span>);
+0125 axis([-1,1,0.8,1.2])
+0126 title([<span class="string">'t='</span>,num2str(t)]);
+0127 <span class="comment">%pause(0.001)</span>
+0128 
+0129 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

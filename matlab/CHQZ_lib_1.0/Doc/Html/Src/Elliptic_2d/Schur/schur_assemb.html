@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of schur_assemb</title>
+  <meta name="keywords" content="schur_assemb">
+  <meta name="description" content="SCHUR_ASSEMB Assembles global Schur complement matrix">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="../index.html">Elliptic_2d</a> &gt; <a href="index.html">Schur</a> &gt; schur_assemb.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_2d/Schur&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>schur_assemb
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>SCHUR_ASSEMB Assembles global Schur complement matrix</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [Sigma]=schur_assemb(AGG,Amm,AGm,LGG,novg,lint,lgamma,param); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> SCHUR_ASSEMB Assembles global Schur complement matrix
+
+ Input: AGG =structure of local matrices A_{\Gamma_m,\Gamma_m}
+        Amm = structure of local matrices (A_{m,m})^{-1}
+        AGm = structure of local matrices A_{\Gamma_m,m}
+        Lmm = structure containing maps from internal{\Omega_m to \Omega_m
+                set in schur_local.m
+        LGG = structure with maps from \Gamma_i to \Gamma
+                set in schur_local.m
+        novi = 2-indexes array of size (max(nvli),ne), computed in cosnovi
+        nvli = column array. nvli(ie) is the number of nodes of \Omega_ie
+        internal to Omega.
+        nov = 2-index array of local to global map, 
+                size(nov)=[max(npdx*npdy),ne]
+        novg = restriction map from (\cup_i \Omega_i) to \Gamma
+                set in cosnovg.m
+        lint =  list of those nodes of Omega (close) which
+                are internal to Omega.
+        lgamma = list of internal nodes which are on the interface between
+                spectral elements
+        ugamma = u on the interface  Gamma
+        f = r.h.s.
+        ub = solution on \partial\Omega
+
+ Output: un = solution in Omega
+
+
+ References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.
+             CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Evolution to Complex Geometries 
+                     and Applications to Fluid DynamicsSpectral Methods&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2007.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Sigma]=schur_assemb(AGG,Amm,AGm,LGG,novg,</a><span class="keyword">...</span>
+0002     lint,lgamma,param);
+0003 <span class="comment">% SCHUR_ASSEMB Assembles global Schur complement matrix</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Input: AGG =structure of local matrices A_{\Gamma_m,\Gamma_m}</span>
+0006 <span class="comment">%        Amm = structure of local matrices (A_{m,m})^{-1}</span>
+0007 <span class="comment">%        AGm = structure of local matrices A_{\Gamma_m,m}</span>
+0008 <span class="comment">%        Lmm = structure containing maps from internal{\Omega_m to \Omega_m</span>
+0009 <span class="comment">%                set in schur_local.m</span>
+0010 <span class="comment">%        LGG = structure with maps from \Gamma_i to \Gamma</span>
+0011 <span class="comment">%                set in schur_local.m</span>
+0012 <span class="comment">%        novi = 2-indexes array of size (max(nvli),ne), computed in cosnovi</span>
+0013 <span class="comment">%        nvli = column array. nvli(ie) is the number of nodes of \Omega_ie</span>
+0014 <span class="comment">%        internal to Omega.</span>
+0015 <span class="comment">%        nov = 2-index array of local to global map,</span>
+0016 <span class="comment">%                size(nov)=[max(npdx*npdy),ne]</span>
+0017 <span class="comment">%        novg = restriction map from (\cup_i \Omega_i) to \Gamma</span>
+0018 <span class="comment">%                set in cosnovg.m</span>
+0019 <span class="comment">%        lint =  list of those nodes of Omega (close) which</span>
+0020 <span class="comment">%                are internal to Omega.</span>
+0021 <span class="comment">%        lgamma = list of internal nodes which are on the interface between</span>
+0022 <span class="comment">%                spectral elements</span>
+0023 <span class="comment">%        ugamma = u on the interface  Gamma</span>
+0024 <span class="comment">%        f = r.h.s.</span>
+0025 <span class="comment">%        ub = solution on \partial\Omega</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Output: un = solution in Omega</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0031 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0032 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0033 <span class="comment">%             CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0034 <span class="comment">%                    &quot;Spectral Methods. Evolution to Complex Geometries</span>
+0035 <span class="comment">%                     and Applications to Fluid DynamicsSpectral Methods&quot;</span>
+0036 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2007.</span>
+0037 
+0038 <span class="comment">%   Written by Paola Gervasio</span>
+0039 <span class="comment">%   $Date: 2007/04/01$</span>
+0040 
+0041 
+0042 n=length(lgamma);
+0043 [ldnov,ne]=size(novg);
+0044 Sigma=zeros(n,n);
+0045 
+0046     <span class="comment">% Schur complement</span>
+0047 <span class="keyword">for</span> ie=1:ne
+0048 lg=LGG{ie};
+0049 ngammam=length(lg);
+0050 agg=AGG{ie};agm=AGm{ie};amm=Amm{ie};
+0051 Sigma_ie=agg-agm*amm*agm';
+0052 Sigma(novg(lg,ie),novg(lg,ie))=Sigma(novg(lg,ie),novg(lg,ie))+Sigma_ie;
+0053 <span class="keyword">end</span>
+0054 
+0055 <span class="keyword">if</span>(param(1)==2)
+0056     <span class="comment">% (Neumann Neumann preconditioner)</span>
+0057 <span class="keyword">for</span> ie=1:ne
+0058 lg=LGG{ie};
+0059 ngammam=length(lg);
+0060 agg=AGG{ie};agm=AGm{ie};amm=Amm{ie};
+0061 Sigma_ie=agg-agm*amm*agm';
+0062 Sigma(novg(lg,ie),novg(lg,ie))=Sigma(novg(lg,ie),novg(lg,ie))+Sigma_ie;
+0063 <span class="keyword">end</span>
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

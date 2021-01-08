@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cosnov_1d</title>
+  <meta name="keywords" content="cosnov_1d">
+  <meta name="description" content="COSNOV_1D : Constructs the 1D (local mesh ---> global mesh) map">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_1</a> &gt; cosnov_1d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_1&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>cosnov_1d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>COSNOV_1D : Constructs the 1D (local mesh ---> global mesh) map</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [nov]=cosnov_1d(npdx,ne,nov); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> COSNOV_1D : Constructs the 1D (local mesh ---&gt; global mesh) map
+ 
+ [nov]=cosnov_1d(npdx,ne,nov) computes the 2-indeces array nov:
+       nov(i,ie) = is the index, with respect to global numbering,
+                   associated to node i of element ie.
+
+ Input: npdx = number of nodes in one element (the same in every element)
+        ne   = number of elements
+        nov  = zeros(max(npdx),ne)
+ Output: nov = 2-indeces array of local to global map.
+
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Elliptic_1d/adr_1d.html" class="code" title="function [xy,un,err_inf,err_l2,err_h1,der]=adr_1d(xa,xb,nu,beta,gam,uex,uexx,ff,cb,ne,p,nx,param);">adr_1d</a>	ADR_1D   Numerical solution of the 1D boundary value problem (1.2.52)-(1.2.53), pag. 17, CHQZ2</li><li><a href="../../Src/Elliptic_1d/ell_1d.html" class="code" title="function [xy,un]=ell_1d(xa,xb,nu,beta,gam,ff,cb,ub,ne,nx);">ell_1d</a>	ELL_1D   Numerical solution of the 1D elliptic boundary value problem (4.3.17) pag. 208, CHQZ2</li><li><a href="../../Src/Elliptic_1d/ellprecofem_1d.html" class="code" title="function [xy,un,A,M,AFE,MFE,MFEd,d,kappa,param]=ellprecofem_1d(xa,xb,nu,beta, gam,ff,cb,ub,ne,nx,param);">ellprecofem_1d</a>	ELLPRECOFEM_1D  FEM-preconditioned SEM-appx of 1D second order b.v.p.</li><li><a href="../../Src/Elliptic_1d/lap_1d.html" class="code" title="function [xy,un,err_inf,err_l2,err_h1]=lap_1d(xa,xb,nu,gam,uex,uexx,ff,cb,ne,nx,param);">lap_1d</a>	LAP_1D   SEM appx of the 1D b.v.p. -nu u''+gam u=f</li><li><a href="errors_1d.html" class="code" title="function [err_inf,err_h1,err_l2]=errors_1d(nx,ne,xa,xb,un,uex,uexx,param);">errors_1d</a>	ERRORS_1D Computes errors  for 1D b.v.p.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [nov]=cosnov_1d(npdx,ne,nov);</a>
+0002 <span class="comment">% COSNOV_1D : Constructs the 1D (local mesh ---&gt; global mesh) map</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% [nov]=cosnov_1d(npdx,ne,nov) computes the 2-indeces array nov:</span>
+0005 <span class="comment">%       nov(i,ie) = is the index, with respect to global numbering,</span>
+0006 <span class="comment">%                   associated to node i of element ie.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Input: npdx = number of nodes in one element (the same in every element)</span>
+0009 <span class="comment">%        ne   = number of elements</span>
+0010 <span class="comment">%        nov  = zeros(max(npdx),ne)</span>
+0011 <span class="comment">% Output: nov = 2-indeces array of local to global map.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0015 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0016 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0017 
+0018 <span class="comment">%   Written by Paola Gervasio</span>
+0019 <span class="comment">%   $Date: 2007/04/01$</span>
+0020 
+0021 nov(1:npdx,1)=(1:npdx)';
+0022 k=npdx(1);
+0023 <span class="keyword">for</span> ie=2:ne
+0024 k1=npdx-1;
+0025 nov(1:npdx,ie)=(k:k+k1)'; k=k+k1;
+0026 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

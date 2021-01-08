@@ -1,0 +1,27 @@
+function [u1]=rk2(t,deltat,f,u0,dx,A,w,visc,uex,uex1,bc);
+%%
+% One step of  Explicit Runge-Kutta second order scheme.
+%
+% [u1]=rk2(t,deltat,f,u0,dx,A,w,visc,uex,uex1,bc);
+%
+%   function called by nonperiodic_burges.m
+%
+
+%   Written by Paola Gervasio
+%   $Date: 2007/04/01$
+%
+
+K1=feval(f,t,deltat,u0,A,dx,w,visc,uex,uex1);
+t1=t+deltat; u1=u0+deltat*K1;
+if bc ==1
+t=t1; u1(1)=uex(-1); u1(np)=uex(1);
+end
+
+K2=feval(f,t1,deltat,u0,A,dx,w,visc,uex,uex1);
+u1=u0+deltat/2*(K1+K2);
+if bc ==1
+t=t1; x=-1; u1(1)=eval(uex); x=1;u1(np)=eval(uex);
+end
+
+return
+

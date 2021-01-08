@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of der2cgl</title>
+  <meta name="keywords" content="der2cgl">
+  <meta name="description" content="DER2CGL    Spectral (Chebyshev Gauss Lobatto) second derivative matrix">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_0</a> &gt; der2cgl.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_0&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>der2cgl
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DER2CGL    Spectral (Chebyshev Gauss Lobatto) second derivative matrix</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [d] = der2cgl(x,np) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DER2CGL    Spectral (Chebyshev Gauss Lobatto) second derivative matrix 
+
+    [d]=der2cgl(x,np) returns the spectral second derivative
+    matrix d at the np CGL nodes X (in [-1,1]). np-1 is the polynomial
+    degree used. Chebyshev Gauss Lobatto (CGL) grid ORDERED FROM LEFT TO RIGHT
+
+
+ Input: x = array of CGL nodes on [-1,1] (computed by xwcgl)
+        np = number of CGL nodes (=n+1, n=polynomial interpolation degree)
+
+ Output: d = spectral derivative matrix: formula  (2.4.32), pag. 89 CHQZ2
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="test.html" class="code" title="">test</a>	TEST Script for testing functions of this directory</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [d] = der2cgl(x,np) </a>
+0002 <span class="comment">% DER2CGL    Spectral (Chebyshev Gauss Lobatto) second derivative matrix</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    [d]=der2cgl(x,np) returns the spectral second derivative</span>
+0005 <span class="comment">%    matrix d at the np CGL nodes X (in [-1,1]). np-1 is the polynomial</span>
+0006 <span class="comment">%    degree used. Chebyshev Gauss Lobatto (CGL) grid ORDERED FROM LEFT TO RIGHT</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Input: x = array of CGL nodes on [-1,1] (computed by xwcgl)</span>
+0010 <span class="comment">%        np = number of CGL nodes (=n+1, n=polynomial interpolation degree)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Output: d = spectral derivative matrix: formula  (2.4.32), pag. 89 CHQZ2</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0015 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0016 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0017 
+0018 <span class="comment">%   Written by Paola Gervasio</span>
+0019 <span class="comment">%   $Date: 2007/04/01$</span>
+0020 
+0021   
+0022 
+0023 n=np-1; 
+0024 x=x(:);
+0025 
+0026 <span class="keyword">if</span> n==0 d=0;  <span class="keyword">return</span>; <span class="keyword">end</span>; 
+0027 
+0028 d=zeros(np,np);
+0029 dueterzi=2/3;
+0030 c=[2;ones(n-1,1);2];
+0031 duenp1=2*n*n+1;
+0032 d(1,1)=(n^4-1)/15;
+0033 <span class="keyword">for</span> l =2:np
+0034 d(1,l)=dueterzi*(-1)^(l-1)/c(l)*(duenp1*(1+x(l))-6)/(1+x(l))^2;
+0035 <span class="keyword">end</span>
+0036 <span class="keyword">for</span> j = 2:n
+0037 <span class="keyword">for</span> l =1:np
+0038   <span class="keyword">if</span> j ~= l          
+0039   d(j,l) = (-1)^(j+l-2)/c(l)*(x(j)*(x(j)+x(l))-2)/((1-x(j)^2)*(x(j)-x(l))^2);
+0040   <span class="keyword">else</span>
+0041   d(j,j) = -((n*n-1)*(1-x(j)^2)+3)/(3*(1-x(j)^2)^2);
+0042   <span class="keyword">end</span>       
+0043 <span class="keyword">end</span>
+0044 <span class="keyword">end</span>
+0045 <span class="keyword">for</span> l=1:n
+0046 d(np,l)=dueterzi*(-1)^(l-1+n)/c(l)*(duenp1*(1-x(l))-6)/(1-x(l))^2;
+0047 <span class="keyword">end</span>
+0048 d(np,np)=d(1,1);
+0049  
+0050 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of pinv_sigma</title>
+  <meta name="keywords" content="pinv_sigma">
+  <meta name="description" content="PINV_SIGMA Computes the pseudoinverse of Sigma_H">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="../index.html">Elliptic_2d</a> &gt; <a href="index.html">Schur</a> &gt; pinv_sigma.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_2d/Schur&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>pinv_sigma
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>PINV_SIGMA Computes the pseudoinverse of Sigma_H</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [PSH]=pinv_sigma(AGG,Amm,AGm,LGG,novg,Rgamma); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PINV_SIGMA Computes the pseudoinverse of Sigma_H
+
+ Computes the pseudoinverse of Sigma_H (Algorithm 6.4.4, pag. 399, CHQZ3) 
+
+ Input : AGG = structure of local matrices A_{\Gamma_m,\Gamma_m}
+         Amm = structure of local matrices (A_{m,m})^{-1}
+         AGm = structure of local matrices A_{\Gamma_m,m}
+         LGG = structure with maps from \Gamma_i to \Gamma
+                 set in schur_local.m
+         novg = restriction map from (\cup_i \Omega_i) to \Gamma
+                 set in cosnovg.m
+         Rgamma = matrix of size (ne, ngamma) (defined in CHQZ3, pag. 399)
+                  (R_\Gamma)_ij: =  1/n_j     if  x_j \in \Gamma_i
+                                 =  0         otherwise
+
+ Output: PSH  = pseudoinverse of Sigma_H, i.e. Rgamma^T A_H^+ Rgamma
+
+
+ References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.
+             CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Evolution to Complex Geometries 
+                     and Applications to Fluid DynamicsSpectral Methods&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2007.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="schur_2d.html" class="code" title="function [xy,un,param]=schur_2d(xa,xb,ya,yb,gam,uex,uex_x,uex_y,ff,g,h,cb,nex,nx,ney,ny,gammax,gammay,param);">schur_2d</a>	SCHUR_2D   Numerical solution of the 2D b.v.p. -Delta u + gam u -Schur complement</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [PSH]=pinv_sigma(AGG,Amm,AGm,LGG,novg,Rgamma);</a>
+0002 <span class="comment">% PINV_SIGMA Computes the pseudoinverse of Sigma_H</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Computes the pseudoinverse of Sigma_H (Algorithm 6.4.4, pag. 399, CHQZ3)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input : AGG = structure of local matrices A_{\Gamma_m,\Gamma_m}</span>
+0007 <span class="comment">%         Amm = structure of local matrices (A_{m,m})^{-1}</span>
+0008 <span class="comment">%         AGm = structure of local matrices A_{\Gamma_m,m}</span>
+0009 <span class="comment">%         LGG = structure with maps from \Gamma_i to \Gamma</span>
+0010 <span class="comment">%                 set in schur_local.m</span>
+0011 <span class="comment">%         novg = restriction map from (\cup_i \Omega_i) to \Gamma</span>
+0012 <span class="comment">%                 set in cosnovg.m</span>
+0013 <span class="comment">%         Rgamma = matrix of size (ne, ngamma) (defined in CHQZ3, pag. 399)</span>
+0014 <span class="comment">%                  (R_\Gamma)_ij: =  1/n_j     if  x_j \in \Gamma_i</span>
+0015 <span class="comment">%                                 =  0         otherwise</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Output: PSH  = pseudoinverse of Sigma_H, i.e. Rgamma^T A_H^+ Rgamma</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0021 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0022 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0023 <span class="comment">%             CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0024 <span class="comment">%                    &quot;Spectral Methods. Evolution to Complex Geometries</span>
+0025 <span class="comment">%                     and Applications to Fluid DynamicsSpectral Methods&quot;</span>
+0026 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2007.</span>
+0027 
+0028 <span class="comment">%   Written by Paola Gervasio</span>
+0029 <span class="comment">%   $Date: 2007/04/01$</span>
+0030 
+0031 [ne,ngamma]=size(Rgamma);
+0032 Sigma=zeros(ngamma,ngamma);
+0033 <span class="keyword">for</span> ie=1:ne
+0034 lg=LGG{ie};
+0035 ngammam=length(lg); nl=novg(lg,ie);
+0036 agg=AGG{ie};agm=AGm{ie};amm=Amm{ie};
+0037 Sigma_loc=agg-agm*amm*agm';
+0038 Sigma(nl,nl)=Sigma(nl,nl)+Sigma_loc;
+0039 <span class="keyword">end</span>
+0040 
+0041 <span class="comment">% A_H=Rgamma*Sigma*Rgamma'</span>
+0042 
+0043 PSH=pinv(full(Rgamma*Sigma*Rgamma'));
+0044 clear Sigma;
+0045 <span class="comment">% Sigma_H^+</span>
+0046 
+0047 PSH=Rgamma'*PSH*Rgamma;</pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

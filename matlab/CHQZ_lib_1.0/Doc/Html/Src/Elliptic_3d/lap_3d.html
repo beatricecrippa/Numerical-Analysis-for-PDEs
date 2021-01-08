@@ -1,0 +1,520 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of lap_3d</title>
+  <meta name="keywords" content="lap_3d">
+  <meta name="description" content="LAP_3D   Numerical solution of the 3D b.v.p. -Delta u + gam u = f">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Elliptic_3d</a> &gt; lap_3d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_3d&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>lap_3d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>LAP_3D   Numerical solution of the 3D b.v.p. -Delta u + gam u = f</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [xyz,un,D,param]=lap_3d(xa,xb,ya,yb,za,zb,gam,uex,uex_x,uex_y,uex_z,ff,nex,nx,ney,ny,nez,nz,gammax,gammay,gammaz,param); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> LAP_3D   Numerical solution of the 3D b.v.p. -Delta u + gam u = f
+
+     -Delta u + gam u = f       x in Omega
+
+      + Dirichlet bc
+
+ by SEM Numerical Integration with LGL quadrature formulas.
+
+  [xy,un,D,param]=lap_3d(xa,xb,ya,yb,za,zb,gam,...
+         uex,uex_x,uex_y,uex_z,ff,nex,nx,ney,ny,nez,nz,gammax,gammay,gammaz,...
+         param);
+
+ Input: xa= abscissa of either vertex V1 
+        xb= abscissa of either vertex V2 
+        ya= ordinate of either vertex V1 
+        yb= ordinate of either vertex V3 
+        za= ordinate of either vertex V1 
+        zb= ordinate of either vertex V5 
+        gam   = coefficient of zeroth order term (constant&gt;=0)
+        uex  = exact solution (uex=@(x,y,z)[uex(x,y,z)], with .*, .^, ./)
+        uex_x  = exact first x-derivative (uex_x=@(x,y,z)[uex_x(x,y,z)], 
+                 with .*, .^, ./)
+        uex_y  = exact first y-derivative (uex_y=@(x,y,z)[uex_y(x,y,z)], 
+                 with .*, .^, ./)
+        uex_z  = exact first z-derivative (uex_z=@(x,y,z)[uex_z(x,y,z)], 
+                 with .*, .^, ./)
+        ff  = r.h.s. solution (ff=@(x,y,z)[ff(x,y,z)], with .*, .^, ./)
+        nex = number of elements (equally spaced) along x-direction
+        nx = polynomial degree in each element (the same in each element)
+               along x-direction
+        ney = number of elements (equally spaced) along y-direction
+        ny = polynomial degree in each element (the same in each element)
+               along y-direction
+        nez = number of elements (equally spaced) along z-direction
+        nz = polynomial degree in each element (the same in each element)
+               along z-direction
+        gammax = column or row array of length nex-1. 
+               If the deomposition of Omega is not
+               uniform, gammax is the vector of position of interfaces between
+               spectral elements along x-direction. If gammax=[], uniform
+               decomposition is used.
+        gammay = column or row array of length ney-1. 
+               If the deomposition of Omega is not
+               uniform, gammay is the vector of position of interfaces between
+               spectral elements along y-direction. If gammay=[], uniform
+               decomposition is used.
+        gammaz = column or row array of length nez-1. 
+               If the deomposition of Omega is not
+               uniform, gammay is the vector of position of interfaces between
+               spectral elements along z-direction. If gammay=[], uniform
+               decomposition is used.
+        param = array of parameters
+        param(1) = 1 : SEM-NI approach, see Sect. 5.3.3, CHQZ3
+        param(2) = 0 : no reordering of the matrix, see pag. 194, CHQZ2
+                   1 : Cuthill-McKee ordering (by symrcm function of
+                   Matlab)
+                   2 : Symmetric minimum degree ordering (by symamd function of
+                   Matlab)
+                   ONLY used if param(3)==1
+        param(3) = 1 : Solve the differential problem with a direct method 
+                   (Cholesky) and compute errors on the exact solution
+                   2 : Compute extrema eigenvalues of stiffness matrix
+                   3 : Compute interface Schur complement, solve the diff.
+                   problem by Schur complement
+                   4: Compute Schur complement and its extrema eigenvalues
+                   5: Compute and plot all the eigenvalues of A (stiffness
+                   matrix)
+                   6: Compute extrema eigenvalues of  M^{-1}A, i.e. 
+                      the generalized eigenvalues of  Av=lambda* M v,
+                      where M is the SEM-NI mass matrix
+        param(4) = 1: compute errors (L^inf-norm, L2-norm, H1-norm) 
+                      on the exact solution
+                   2: no  errors are computed
+        param(5) = 0: LG quadrature formulas with high precision degree are
+                      used to compute norms (exact norms)
+                   1: LGL quadrature formulas with npdx,npdy nodes are
+                      used to compute norms (discrete norms)
+                   (used only if param(4) == 1)
+        param(6) = number of nodes for high degree quadrature formula,
+                   (used only if param(5) == 0 &amp; param(4) == 1)
+        param(7) = 0: absolute errors are computed
+                   1: relative errors are computed
+                   (used only if param(4) == 1)
+        param(8) = 0: not plot the solution
+                   1: plot the solution (mesh)
+                   2: plot the solution (surf)
+                   3: plot the solution (contour)
+        param(9) = number of nodes in each element and along each direction 
+                   for plotting the solution
+                   (used only if param(8) &gt; 0)
+                   
+ Output: xyz = 3-indexes array wiht coordinates of 3D LGL mesh              
+         un = numerical solution
+         D  = (if param(3)==5)  eigenvalues of A
+         param(21) = (if param(3)==1)  cputime for reordering stiffness
+                  matrix befor solving
+         param(22) = (if param(3)==1)  cputime for solving linear system 
+                  by Choleski factorization
+         param(23,24) = (if param(3)==2) extrema eigenvalues (max,min) of
+                  stiffness matrix A
+         param(25,26) = (if param(3)==4) extrema eigenvalues (max,min) of
+                  interface Schur complement
+         param(27,28) = (if param(3)==6) extrema generalized eigenvalues 
+                 (max,min) of
+                 A v = lambda M v, where A is the stiffness matrix and M is the
+                 mass matrix
+         param(29,30,31) = (if param(4)==1 &amp; (param(3)==1 | param(3)==3)) 
+                   errors on the exact solution:
+                   L^inf-norm, L2-norm, H1-norm
+
+
+           Omega=(xa,xb) x (ya,yb) x (za,zb)
+
+             V8  _________ V7
+               /|        /|
+              / |       / |
+          V5 /________ /V6|
+             |  |      |  |
+             |V4|______|__| V3
+             |  /      | /               
+             | /       |/
+             |/________/
+           V1            V2
+                      
+
+
+       __________________________
+       |      |      |     |     |
+       |  3   |  6   |  9  | 12  |      Spectral elements
+       |      |      |     |     |      ordering in a plane yz then 
+       __________________________       planes at different x follow.
+       |      |      |     |     |
+       |  2   |  5   |  8  | 11  |
+       |      |      |     |     |
+       __________________________
+       |      |      |     |     |
+       |  1   |  4   |  7  | 10  |
+       |      |      |     |     |
+       __________________________</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>	DERLGL      Spectral (Legendre Gauss Lobatto) derivative matrix</li><li><a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>	XWLGL Computes nodes and weights of the Legendre-Gauss-Lobatto quadrature formula.</li><li><a href="../../Src/Level_2/liste.html" class="code" title="function [lbor,lint,lintint,lgamma,ifro]=liste(ifro,nov);">liste</a>	LISTE Assembles lists of internal, boundary, interface nodes.</li><li><a href="../../Src/Level_3/errors_3d.html" class="code" title="function [err_inf,err_h1,err_l2]=errors_3d(x,wx,dx,xx,jacx,y,wy,dy,yy,jacy,z,wz,dz,zz,jacz,xyz,ww,nov,un,uex,uex_x,uex_y,uex_z,param);">errors_3d</a>	ERRORS_3D Computes errors for 3D b.v.p.</li><li><a href="../../Src/Level_3/mesh_3d.html" class="code" title="function[xx,yy,zz,jacx,jacy,jacz,xyz,ww,ifro,nov]=mesh3d(xa,xb,ya,yb,za,zb,nex,ney,nez,npdx,npdy,npdz,x,wx,y,wy,z,wz,gammax,gammay,gammaz);">mesh_3d</a>	MESH3D   Uniform 3D Spectral element mesh on parallelepipedon</li><li><a href="../../Src/Level_3/stiff_3d_se.html" class="code" title="function [A]=stiff_3d_se(npdx,nex,npdy,ney,npdz,nez,nov,wx,dx,jacx,wy,dy,jacy,wz,dz,jacz);">stiff_3d_se</a>	STIFF_3D_SE Assembles 3D global stiffness SEM matrix associated to (nabla(phi_j), nabla(phi_i))</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="call_lap_3d.html" class="code" title="">call_lap_3d</a>	CALL_LAP_3D Script for pre- and post-processing lap_3d</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [xyz,un,D,param]=lap_3d(xa,xb,ya,yb,za,zb,gam,</a><span class="keyword">...</span>
+0002           uex,uex_x,uex_y,uex_z,ff,nex,nx,ney,ny,nez,nz,gammax,gammay,gammaz,<span class="keyword">...</span>
+0003           param);
+0004 <span class="comment">% LAP_3D   Numerical solution of the 3D b.v.p. -Delta u + gam u = f</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%     -Delta u + gam u = f       x in Omega</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%      + Dirichlet bc</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% by SEM Numerical Integration with LGL quadrature formulas.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%  [xy,un,D,param]=lap_3d(xa,xb,ya,yb,za,zb,gam,...</span>
+0013 <span class="comment">%         uex,uex_x,uex_y,uex_z,ff,nex,nx,ney,ny,nez,nz,gammax,gammay,gammaz,...</span>
+0014 <span class="comment">%         param);</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Input: xa= abscissa of either vertex V1</span>
+0017 <span class="comment">%        xb= abscissa of either vertex V2</span>
+0018 <span class="comment">%        ya= ordinate of either vertex V1</span>
+0019 <span class="comment">%        yb= ordinate of either vertex V3</span>
+0020 <span class="comment">%        za= ordinate of either vertex V1</span>
+0021 <span class="comment">%        zb= ordinate of either vertex V5</span>
+0022 <span class="comment">%        gam   = coefficient of zeroth order term (constant&gt;=0)</span>
+0023 <span class="comment">%        uex  = exact solution (uex=@(x,y,z)[uex(x,y,z)], with .*, .^, ./)</span>
+0024 <span class="comment">%        uex_x  = exact first x-derivative (uex_x=@(x,y,z)[uex_x(x,y,z)],</span>
+0025 <span class="comment">%                 with .*, .^, ./)</span>
+0026 <span class="comment">%        uex_y  = exact first y-derivative (uex_y=@(x,y,z)[uex_y(x,y,z)],</span>
+0027 <span class="comment">%                 with .*, .^, ./)</span>
+0028 <span class="comment">%        uex_z  = exact first z-derivative (uex_z=@(x,y,z)[uex_z(x,y,z)],</span>
+0029 <span class="comment">%                 with .*, .^, ./)</span>
+0030 <span class="comment">%        ff  = r.h.s. solution (ff=@(x,y,z)[ff(x,y,z)], with .*, .^, ./)</span>
+0031 <span class="comment">%        nex = number of elements (equally spaced) along x-direction</span>
+0032 <span class="comment">%        nx = polynomial degree in each element (the same in each element)</span>
+0033 <span class="comment">%               along x-direction</span>
+0034 <span class="comment">%        ney = number of elements (equally spaced) along y-direction</span>
+0035 <span class="comment">%        ny = polynomial degree in each element (the same in each element)</span>
+0036 <span class="comment">%               along y-direction</span>
+0037 <span class="comment">%        nez = number of elements (equally spaced) along z-direction</span>
+0038 <span class="comment">%        nz = polynomial degree in each element (the same in each element)</span>
+0039 <span class="comment">%               along z-direction</span>
+0040 <span class="comment">%        gammax = column or row array of length nex-1.</span>
+0041 <span class="comment">%               If the deomposition of Omega is not</span>
+0042 <span class="comment">%               uniform, gammax is the vector of position of interfaces between</span>
+0043 <span class="comment">%               spectral elements along x-direction. If gammax=[], uniform</span>
+0044 <span class="comment">%               decomposition is used.</span>
+0045 <span class="comment">%        gammay = column or row array of length ney-1.</span>
+0046 <span class="comment">%               If the deomposition of Omega is not</span>
+0047 <span class="comment">%               uniform, gammay is the vector of position of interfaces between</span>
+0048 <span class="comment">%               spectral elements along y-direction. If gammay=[], uniform</span>
+0049 <span class="comment">%               decomposition is used.</span>
+0050 <span class="comment">%        gammaz = column or row array of length nez-1.</span>
+0051 <span class="comment">%               If the deomposition of Omega is not</span>
+0052 <span class="comment">%               uniform, gammay is the vector of position of interfaces between</span>
+0053 <span class="comment">%               spectral elements along z-direction. If gammay=[], uniform</span>
+0054 <span class="comment">%               decomposition is used.</span>
+0055 <span class="comment">%        param = array of parameters</span>
+0056 <span class="comment">%        param(1) = 1 : SEM-NI approach, see Sect. 5.3.3, CHQZ3</span>
+0057 <span class="comment">%        param(2) = 0 : no reordering of the matrix, see pag. 194, CHQZ2</span>
+0058 <span class="comment">%                   1 : Cuthill-McKee ordering (by symrcm function of</span>
+0059 <span class="comment">%                   Matlab)</span>
+0060 <span class="comment">%                   2 : Symmetric minimum degree ordering (by symamd function of</span>
+0061 <span class="comment">%                   Matlab)</span>
+0062 <span class="comment">%                   ONLY used if param(3)==1</span>
+0063 <span class="comment">%        param(3) = 1 : Solve the differential problem with a direct method</span>
+0064 <span class="comment">%                   (Cholesky) and compute errors on the exact solution</span>
+0065 <span class="comment">%                   2 : Compute extrema eigenvalues of stiffness matrix</span>
+0066 <span class="comment">%                   3 : Compute interface Schur complement, solve the diff.</span>
+0067 <span class="comment">%                   problem by Schur complement</span>
+0068 <span class="comment">%                   4: Compute Schur complement and its extrema eigenvalues</span>
+0069 <span class="comment">%                   5: Compute and plot all the eigenvalues of A (stiffness</span>
+0070 <span class="comment">%                   matrix)</span>
+0071 <span class="comment">%                   6: Compute extrema eigenvalues of  M^{-1}A, i.e.</span>
+0072 <span class="comment">%                      the generalized eigenvalues of  Av=lambda* M v,</span>
+0073 <span class="comment">%                      where M is the SEM-NI mass matrix</span>
+0074 <span class="comment">%        param(4) = 1: compute errors (L^inf-norm, L2-norm, H1-norm)</span>
+0075 <span class="comment">%                      on the exact solution</span>
+0076 <span class="comment">%                   2: no  errors are computed</span>
+0077 <span class="comment">%        param(5) = 0: LG quadrature formulas with high precision degree are</span>
+0078 <span class="comment">%                      used to compute norms (exact norms)</span>
+0079 <span class="comment">%                   1: LGL quadrature formulas with npdx,npdy nodes are</span>
+0080 <span class="comment">%                      used to compute norms (discrete norms)</span>
+0081 <span class="comment">%                   (used only if param(4) == 1)</span>
+0082 <span class="comment">%        param(6) = number of nodes for high degree quadrature formula,</span>
+0083 <span class="comment">%                   (used only if param(5) == 0 &amp; param(4) == 1)</span>
+0084 <span class="comment">%        param(7) = 0: absolute errors are computed</span>
+0085 <span class="comment">%                   1: relative errors are computed</span>
+0086 <span class="comment">%                   (used only if param(4) == 1)</span>
+0087 <span class="comment">%        param(8) = 0: not plot the solution</span>
+0088 <span class="comment">%                   1: plot the solution (mesh)</span>
+0089 <span class="comment">%                   2: plot the solution (surf)</span>
+0090 <span class="comment">%                   3: plot the solution (contour)</span>
+0091 <span class="comment">%        param(9) = number of nodes in each element and along each direction</span>
+0092 <span class="comment">%                   for plotting the solution</span>
+0093 <span class="comment">%                   (used only if param(8) &gt; 0)</span>
+0094 <span class="comment">%</span>
+0095 <span class="comment">% Output: xyz = 3-indexes array wiht coordinates of 3D LGL mesh</span>
+0096 <span class="comment">%         un = numerical solution</span>
+0097 <span class="comment">%         D  = (if param(3)==5)  eigenvalues of A</span>
+0098 <span class="comment">%         param(21) = (if param(3)==1)  cputime for reordering stiffness</span>
+0099 <span class="comment">%                  matrix befor solving</span>
+0100 <span class="comment">%         param(22) = (if param(3)==1)  cputime for solving linear system</span>
+0101 <span class="comment">%                  by Choleski factorization</span>
+0102 <span class="comment">%         param(23,24) = (if param(3)==2) extrema eigenvalues (max,min) of</span>
+0103 <span class="comment">%                  stiffness matrix A</span>
+0104 <span class="comment">%         param(25,26) = (if param(3)==4) extrema eigenvalues (max,min) of</span>
+0105 <span class="comment">%                  interface Schur complement</span>
+0106 <span class="comment">%         param(27,28) = (if param(3)==6) extrema generalized eigenvalues</span>
+0107 <span class="comment">%                 (max,min) of</span>
+0108 <span class="comment">%                 A v = lambda M v, where A is the stiffness matrix and M is the</span>
+0109 <span class="comment">%                 mass matrix</span>
+0110 <span class="comment">%         param(29,30,31) = (if param(4)==1 &amp; (param(3)==1 | param(3)==3))</span>
+0111 <span class="comment">%                   errors on the exact solution:</span>
+0112 <span class="comment">%                   L^inf-norm, L2-norm, H1-norm</span>
+0113 <span class="comment">%</span>
+0114 <span class="comment">%</span>
+0115 <span class="comment">%           Omega=(xa,xb) x (ya,yb) x (za,zb)</span>
+0116 <span class="comment">%</span>
+0117 <span class="comment">%             V8  _________ V7</span>
+0118 <span class="comment">%               /|        /|</span>
+0119 <span class="comment">%              / |       / |</span>
+0120 <span class="comment">%          V5 /________ /V6|</span>
+0121 <span class="comment">%             |  |      |  |</span>
+0122 <span class="comment">%             |V4|______|__| V3</span>
+0123 <span class="comment">%             |  /      | /</span>
+0124 <span class="comment">%             | /       |/</span>
+0125 <span class="comment">%             |/________/</span>
+0126 <span class="comment">%           V1            V2</span>
+0127 <span class="comment">%</span>
+0128 <span class="comment">%</span>
+0129 <span class="comment">%</span>
+0130 <span class="comment">%       __________________________</span>
+0131 <span class="comment">%       |      |      |     |     |</span>
+0132 <span class="comment">%       |  3   |  6   |  9  | 12  |      Spectral elements</span>
+0133 <span class="comment">%       |      |      |     |     |      ordering in a plane yz then</span>
+0134 <span class="comment">%       __________________________       planes at different x follow.</span>
+0135 <span class="comment">%       |      |      |     |     |</span>
+0136 <span class="comment">%       |  2   |  5   |  8  | 11  |</span>
+0137 <span class="comment">%       |      |      |     |     |</span>
+0138 <span class="comment">%       __________________________</span>
+0139 <span class="comment">%       |      |      |     |     |</span>
+0140 <span class="comment">%       |  1   |  4   |  7  | 10  |</span>
+0141 <span class="comment">%       |      |      |     |     |</span>
+0142 <span class="comment">%       __________________________</span>
+0143 <span class="comment">%</span>
+0144 
+0145 xyz=[]; un=[]; D=[]; 
+0146 
+0147 npdx=nx+1; npdy=ny+1; npdz=nz+1;
+0148 mn=npdx*npdy; ldnov=mn*npdz; ne=nex*ney*nez;
+0149 
+0150 
+0151 [x,wx]=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdx); [dx]=<a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>(x,npdx);
+0152 [y,wy]=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdy); [dy]=<a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>(y,npdy);
+0153 [z,wz]=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdz); [dz]=<a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>(z,npdz);
+0154 
+0155 <span class="comment">% Mesh generation (with nov construction)</span>
+0156 
+0157 [xx,yy,zz,jacx,jacy,jacz,xyz,ww,ifro,nov]=<a href="../../Src/Level_3/mesh_3d.html" class="code" title="function[xx,yy,zz,jacx,jacy,jacz,xyz,ww,ifro,nov]=mesh3d(xa,xb,ya,yb,za,zb,nex,ney,nez,npdx,npdy,npdz,x,wx,y,wy,z,wz,gammax,gammay,gammaz);">mesh_3d</a>(xa,xb,ya,yb,za,zb,nex,ney,nez,<span class="keyword">...</span>
+0158 npdx,npdy,npdz,x,wx,y,wy,z,wz,gammax,gammay,gammaz);
+0159 
+0160 <span class="comment">% Matrix assembling</span>
+0161 noe=length(ww);
+0162 A=<a href="../../Src/Level_3/stiff_3d_se.html" class="code" title="function [A]=stiff_3d_se(npdx,nex,npdy,ney,npdz,nez,nov,wx,dx,jacx,wy,dy,jacy,wz,dz,jacz);">stiff_3d_se</a>(npdx,nex,npdy,ney,npdz,nez,nov,wx,dx,jacx,wy,dy,jacy,wz,dz,jacz);
+0163 M=spdiags(ww,0,noe,noe);
+0164 
+0165 <span class="keyword">if</span> gam ~=0
+0166     A=A+gam*M;
+0167 <span class="keyword">end</span>
+0168 
+0169 <span class="comment">% Rigth Hand Side</span>
+0170 f=ff(xyz(:,1),xyz(:,2),xyz(:,3)).*ww;
+0171 
+0172 
+0173 
+0174 <span class="comment">% Lists of internal, boundary, interface nodes. All lists are referred to</span>
+0175 <span class="comment">% global ordering on Omega</span>
+0176 <span class="comment">%</span>
+0177 <span class="comment">% lbor: list of boundary nodes</span>
+0178 <span class="comment">% lint: list of internal nodes</span>
+0179 <span class="comment">% lintint: list of internal nodes which are internal to spectral elements</span>
+0180 <span class="comment">% lgamma: list of internal nodes which are on the interface between spectral elements</span>
+0181 
+0182 
+0183 
+0184 [ldir,lint,lintint,lgamma,ifro]=<a href="../../Src/Level_2/liste.html" class="code" title="function [lbor,lint,lintint,lgamma,ifro]=liste(ifro,nov);">liste</a>(ifro,nov);
+0185 
+0186 
+0187 <span class="comment">% Setting Dirichlet boundary conditions on both matrix and r.h.s</span>
+0188 ub=ifro.*uex(xyz(:,1),xyz(:,2),xyz(:,3));
+0189 
+0190 f(lint)=f(lint)-A(lint,ldir)*ub(ldir);
+0191 A=A(lint,lint); M=M(lint,lint);
+0192 f=f(lint);
+0193 noei=length(lint);
+0194 
+0195 <span class="comment">%   selection on param(3)</span>
+0196 
+0197 
+0198 <span class="keyword">if</span> (param(3)==1)
+0199 
+0200     <span class="comment">% Solve the linear system by a direct method</span>
+0201 
+0202 <span class="keyword">if</span> param(2)==0
+0203         <span class="comment">% no reordering</span>
+0204         t_ord=0;
+0205 t=cputime; un=A\f;t_solv=cputime-t;
+0206 
+0207 <span class="keyword">elseif</span> param(2)==1
+0208         <span class="comment">% Cuthill-McKee ordering</span>
+0209 t=cputime; pp=symrcm(A);t_ord=cputime-t;
+0210 t=cputime; un(pp)=A(pp,pp)\f(pp);t_solv=cputime-t;
+0211 
+0212 <span class="keyword">elseif</span> param(2)==2
+0213     <span class="comment">% Symmetric Minimum degree ordering</span>
+0214 t=cputime; pp=symamd(A);t_ord=cputime-t;
+0215 t=cputime; un(pp)=A(pp,pp)\f(pp);t_solv=cputime-t;
+0216 <span class="keyword">end</span>
+0217 
+0218 
+0219 param(21)=t_ord;
+0220 param(22)=t_solv;
+0221  
+0222 <span class="comment">%</span>
+0223 ub(lint)=un;
+0224 un=ub;
+0225 
+0226 
+0227 
+0228 <span class="keyword">elseif</span>(param(3)==2)
+0229     
+0230 <span class="comment">% Compute extrema eigenvalues of the stiffness matrix</span>
+0231 keigs=1;
+0232 <span class="keyword">if</span>(param(1)==1)
+0233     <span class="comment">% Symmetric problem</span>
+0234 opts.issym=1;opts.disp=0;opts.maxit=1000; opts.tol=1.d-12;
+0235 lambda_max=eigs(A,keigs,<span class="string">'lm'</span>,opts);
+0236 lambda_min=eigs(A,1,<span class="string">'sm'</span>,opts);
+0237 <span class="keyword">else</span>
+0238 opts.issym=0;opts.disp=0;opts.maxit=1000; opts.tol=1.d-12;
+0239 lambda_max=eigs(A,keigs,<span class="string">'lm'</span>,opts);
+0240 lambda_min=eigs(A,1,<span class="string">'sm'</span>,opts);
+0241 <span class="keyword">end</span>
+0242 param(23)=lambda_max;
+0243 param(24)=lambda_min;
+0244 
+0245 
+0246 <span class="keyword">elseif</span>(param(3)==3)
+0247 
+0248 <span class="comment">% Compute interface Schur complement, solve the differential problem by</span>
+0249 <span class="comment">% the Schur complement</span>
+0250 
+0251 Sigma=A(lgamma,lgamma)-A(lgamma,lintint)*inv(A(lintint,lintint))*A(lintint,lgamma);
+0252 
+0253 <span class="comment">% Solve  Schur linear system and internal linear systems by \ of matlab</span>
+0254 
+0255 fsigma=f(lgamma)-A(lgamma,lintint)*inv(A(lintint,lintint))*f(lintint);
+0256 xsigma=Sigma\fsigma;
+0257 xint=A(lintint,lintint)\(f(lintint)-A(lintint,lgamma)*xsigma);
+0258 u2=zeros(noei,1);
+0259 u2(lgamma)=xsigma;
+0260 u2(lintint)=xint;
+0261 ub(lint)=u2;
+0262 un=ub;
+0263 
+0264 
+0265 <span class="keyword">elseif</span>(param(3)==4)
+0266 
+0267 <span class="comment">% Compute interface Schur complement and its extrema eigenvalues</span>
+0268 
+0269 Sigma=A(lgamma,lgamma)-A(lgamma,lintint)*inv(A(lintint,lintint))*A(lintint,lgamma);
+0270 
+0271 clear A; clear f;
+0272 opts.issym=1;opts.disp=0;opts.maxit=1000; opts.tol=1.d-12;
+0273 lambda_max=eigs(Sigma,1,<span class="string">'lm'</span>,opts);
+0274 lambda_min=eigs(Sigma,1,<span class="string">'sm'</span>,opts);
+0275 param(25)=lambda_max;
+0276 param(26)=lambda_min;
+0277 
+0278 
+0279 <span class="keyword">elseif</span>(param(3)==5)
+0280 <span class="comment">% compute and plot eigenvalues of A</span>
+0281 D=eig(full(A));
+0282 fig=figure(<span class="keyword">...</span><span class="comment">,</span>
+0283     <span class="string">'Name'</span>,<span class="string">'Spectrum of SEM-NI stiffness matrix'</span>,<span class="keyword">...</span>
+0284     <span class="string">'Visible'</span>,<span class="string">'on'</span>)
+0285 plot(real(D),imag(D),<span class="string">'o'</span>)
+0286 set(gca,<span class="string">'Fontname'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,18)
+0287 xlabel(<span class="string">'Re'</span>); ylabel(<span class="string">'Im'</span>)
+0288 <span class="keyword">if</span> param(1)==1
+0289 set(gca,<span class="string">'Fontname'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,18)
+0290 title([<span class="string">'N='</span>,num2str(nx),<span class="string">' H='</span>,num2str(2/nex), <span class="string">' SEM-NI'</span>])
+0291 <span class="keyword">else</span>
+0292 set(gca,<span class="string">'Fontname'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,18)
+0293 title([<span class="string">'N='</span>,num2str(nx),<span class="string">' H='</span>,num2str(2/nex), <span class="string">' Patching'</span>])
+0294 <span class="keyword">end</span>
+0295 
+0296 
+0297 <span class="keyword">elseif</span>(param(3)==6)
+0298     keigs=1;
+0299 <span class="comment">% compute extrema eigenvalues of  M^{-1}A, i.e.</span>
+0300 <span class="comment">%  the generalized eigenvalues of  Av=lambda* M v</span>
+0301 <span class="keyword">if</span>(param(1)==1)
+0302 opts.issym=1;opts.disp=0;opts.maxit=1000; opts.tol=1.d-12;
+0303 lambda_max=eigs(A,M,keigs,<span class="string">'lm'</span>,opts);
+0304 lambda_min=eigs(A,M,keigs,<span class="string">'sm'</span>,opts);
+0305 param(27)=lambda_max;
+0306 param(28)=lambda_min;
+0307 
+0308 <span class="keyword">elseif</span>(param(2)==2)
+0309     disp(<span class="string">'No eigenvalues are computed'</span>)
+0310 <span class="keyword">end</span>
+0311 
+0312 <span class="keyword">end</span>
+0313 
+0314 <span class="keyword">if</span> (param(4)==1 &amp; (param(3)==1 | param(3)==3))
+0315     <span class="comment">% compute errors on the exact solution</span>
+0316 [err_inf,err_h1,err_l2]=<a href="../../Src/Level_3/errors_3d.html" class="code" title="function [err_inf,err_h1,err_l2]=errors_3d(x,wx,dx,xx,jacx,y,wy,dy,yy,jacy,z,wz,dz,zz,jacz,xyz,ww,nov,un,uex,uex_x,uex_y,uex_z,param);">errors_3d</a>(x,wx,dx,xx,jacx,y,wy,dy,yy,jacy,<span class="keyword">...</span>
+0317 z,wz,dz,zz,jacz,<span class="keyword">...</span>
+0318 xyz,ww,nov,un,uex,uex_x,uex_y,uex_z,param);
+0319 param(29:31)=[err_inf;err_h1;err_l2];
+0320 <span class="keyword">end</span>
+0321 
+0322 <span class="keyword">if</span> (param(8)&gt;0 &amp; (param(3)==1 | param(3)==3))
+0323     <span class="keyword">if</span> param(8)==1
+0324         command=<span class="string">'mesh'</span>;
+0325     <span class="keyword">elseif</span> param(8)==2
+0326         command=<span class="string">'surf'</span>;
+0327     <span class="keyword">elseif</span> param(8)==3;
+0328         command=<span class="string">'contour'</span>
+0329     <span class="keyword">end</span>
+0330 <span class="comment">% plot the solution</span>
+0331 fig=figure(<span class="keyword">...</span><span class="comment">,</span>
+0332     <span class="string">'Name'</span>,<span class="string">'SEM-NI solution of -Delta u + gam u=f, Dirichlet bc'</span>,<span class="keyword">...</span>
+0333     <span class="string">'Visible'</span>,<span class="string">'on'</span>);
+0334 <span class="comment">%[hf,ha]=plot_sem(fig,command,nex,ney,x,xx,jacx,y,yy,jacy,xy,ww,nov,un,param);</span>
+0335 
+0336 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,23 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  plot_2dmodal -> pol_legendre;
+  plot_2dmodal -> pol_modal;
+  plot_legendre -> pol_legendre;
+  plot_modal -> pol_legendre;
+  plot_modal -> pol_modal;
+  test -> plot_2dlagrange;
+  test -> plot_2dmodal;
+  test -> plot_lagrange;
+  test -> plot_legendre;
+  test -> plot_modal;
+
+  derpol_legendre [URL="derpol_legendre.html"];
+  plot_2dlagrange [URL="plot_2dlagrange.html"];
+  plot_2dmodal [URL="plot_2dmodal.html"];
+  plot_lagrange [URL="plot_lagrange.html"];
+  plot_legendre [URL="plot_legendre.html"];
+  plot_modal [URL="plot_modal.html"];
+  pol_legendre [URL="pol_legendre.html"];
+  pol_modal [URL="pol_modal.html"];
+  test [URL="test.html"];
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of derlgl</title>
+  <meta name="keywords" content="derlgl">
+  <meta name="description" content="DERLGL      Spectral (Legendre Gauss Lobatto) derivative matrix">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_0</a> &gt; derlgl.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_0&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>derlgl
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DERLGL      Spectral (Legendre Gauss Lobatto) derivative matrix</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [d] = derlgl(x,np) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DERLGL      Spectral (Legendre Gauss Lobatto) derivative matrix 
+
+    [d]=derlgl(x,np) returns the spectral Legendre Gauss Lobatto derivative
+    matrix d at the np LGL nodes x (on [-1,1]). np-1 is the polynomial
+    degree used. Legendre Gauss Lobatto (LGL) grid
+
+
+ Input: x = array of LGL nodes on [-1,1] (computed by xwlgl)
+        np = number of LGL nodes (=n+1, n=polynomial interpolation degree)
+
+ Output: D = spectral derivative matrix: formula  (2.3.28), pag. 80 CHQZ2
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="pnleg.html" class="code" title="function [p] = pnleg (x, n)">pnleg</a>	PNLEG      Evaluates Legendre polynomial of degree n at x</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Burgers/nonperiodic_burgers.html" class="code" title="function [u,err]=nonperiodic_burgers(xa,xb,t0,T,visc,nx,deltat,tscheme,bc)">nonperiodic_burgers</a>	NONPERIODIC_BURGERS Numerical solution of non periodic Burgers equation</li><li><a href="../../Src/Eigenvalues_1d/lgl_eig.html" class="code" title="function [d,A]=lgl_eig(nx,nu,pbl);">lgl_eig</a>	LGL_EIG   Computes eigenvalues of first/second order spectral derivative matrices: collocation/G-NI,  LGL nodes, 1D monodomain</li><li><a href="../../Src/Elliptic_1d/adr_1d.html" class="code" title="function [xy,un,err_inf,err_l2,err_h1,der]=adr_1d(xa,xb,nu,beta,gam,uex,uexx,ff,cb,ne,p,nx,param);">adr_1d</a>	ADR_1D   Numerical solution of the 1D boundary value problem (1.2.52)-(1.2.53), pag. 17, CHQZ2</li><li><a href="../../Src/Elliptic_1d/ell_1d.html" class="code" title="function [xy,un]=ell_1d(xa,xb,nu,beta,gam,ff,cb,ub,ne,nx);">ell_1d</a>	ELL_1D   Numerical solution of the 1D elliptic boundary value problem (4.3.17) pag. 208, CHQZ2</li><li><a href="../../Src/Elliptic_1d/ellprecofem_1d.html" class="code" title="function [xy,un,A,M,AFE,MFE,MFEd,d,kappa,param]=ellprecofem_1d(xa,xb,nu,beta, gam,ff,cb,ub,ne,nx,param);">ellprecofem_1d</a>	ELLPRECOFEM_1D  FEM-preconditioned SEM-appx of 1D second order b.v.p.</li><li><a href="../../Src/Elliptic_1d/lap_1d.html" class="code" title="function [xy,un,err_inf,err_l2,err_h1]=lap_1d(xa,xb,nu,gam,uex,uexx,ff,cb,ne,nx,param);">lap_1d</a>	LAP_1D   SEM appx of the 1D b.v.p. -nu u''+gam u=f</li><li><a href="../../Src/Elliptic_2d/Schur/eig_schur_2d.html" class="code" title="function [param]=eig_schur_2d(xa,xb,ya,yb,gam,cb,nex,nx,ney,ny,gammax,gammay,param);">eig_schur_2d</a>	EIG_SCHUR_2D   Eigenvalues computation Schur complement matrix</li><li><a href="../../Src/Elliptic_2d/Schur/schur_2d.html" class="code" title="function [xy,un,param]=schur_2d(xa,xb,ya,yb,gam,uex,uex_x,uex_y,ff,g,h,cb,nex,nx,ney,ny,gammax,gammay,param);">schur_2d</a>	SCHUR_2D   Numerical solution of the 2D b.v.p. -Delta u + gam u -Schur complement</li><li><a href="../../Src/Elliptic_2d/Schwarz/eig_schwarz_2d.html" class="code" title="function [param]=eig_schwarz_2d(xa,xb,ya,yb,gam,cb,nex,nx,ney,ny,gammax,gammay,param);">eig_schwarz_2d</a>	EIG_SCHWARZ_2D   Eigenvalues computation for the matrix associated to 2D b.v.p. -Delta u + gam u = f + Dirichlet b.c.</li><li><a href="../../Src/Elliptic_2d/Schwarz/schwarz_2d.html" class="code" title="function [xy,un,param]=schwarz_2d(xa,xb,ya,yb,gam,uex,uex_x,uex_y,ff,g,h,cb,nex,nx,ney,ny,gammax,gammay,param);">schwarz_2d</a>	SCHWARZ_2D   Numerical solution of the 2D boundary value problem</li><li><a href="../../Src/Elliptic_2d/lap_2d.html" class="code" title="function [xy,un,D,param]=lap_2d(xa,xb,ya,yb,gam,uex,uex_x,uex_y,ff,g,h,cb,nex,nx,ney,ny,gammax,gammay,param);">lap_2d</a>	LAP_2D   Numerical solution of the 2D b.v.p. -Delta u + gam u = f</li><li><a href="../../Src/Elliptic_3d/lap_3d.html" class="code" title="function [xyz,un,D,param]=lap_3d(xa,xb,ya,yb,za,zb,gam,uex,uex_x,uex_y,uex_z,ff,nex,nx,ney,ny,nez,nz,gammax,gammay,gammaz,param);">lap_3d</a>	LAP_3D   Numerical solution of the 3D b.v.p. -Delta u + gam u = f</li><li><a href="../../Src/Hyperbolic_1d/scalar_hyp.html" class="code" title="function [x,u,err,Psi,Phi]=scalar_hyp(xa,xb,t0,T,beta,uex,u0,ul,nx,deltat,param)">scalar_hyp</a>	SCALAR_HYP Numerical solution of scalar linear hyperbolic equations,</li><li><a href="../../Src/Hyperbolic_1d/stag_scalar_hyp.html" class="code" title="function [x,u,err,Psi,Phi]=stag_scalar_hyp(xa,xb,t0,T,beta,uex,u0,ul,nx,deltat)">stag_scalar_hyp</a>	STAG_SCALAR_HYP  Numerical solution of scalar linear hyperbolic equations,</li><li><a href="../../Src/Hyperbolic_1d/stat_scalar_hyp.html" class="code" title="function [x,u,err]=stat_scalar_hyp(xa,xb,beta,f,uex,ul,nx,param)">stat_scalar_hyp</a>	STAT_SCALAR_HYP Numerical solution of a stationary scalar linear hyperbolic equation,</li><li><a href="test.html" class="code" title="">test</a>	TEST Script for testing functions of this directory</li><li><a href="../../Src/Level_1/errors_1d.html" class="code" title="function [err_inf,err_h1,err_l2]=errors_1d(nx,ne,xa,xb,un,uex,uexx,param);">errors_1d</a>	ERRORS_1D Computes errors  for 1D b.v.p.</li><li><a href="../../Src/Level_1/matrices_1d.html" class="code" title="function [A,M]=matrices_1d(xa,xb,cb,ne,nx);">matrices_1d</a>	MATRICES_1D   Assembles SEM stiffness and mass matrices for 1D b.v.p.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [d] = derlgl(x,np) </a>
+0002 <span class="comment">%DERLGL      Spectral (Legendre Gauss Lobatto) derivative matrix</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    [d]=derlgl(x,np) returns the spectral Legendre Gauss Lobatto derivative</span>
+0005 <span class="comment">%    matrix d at the np LGL nodes x (on [-1,1]). np-1 is the polynomial</span>
+0006 <span class="comment">%    degree used. Legendre Gauss Lobatto (LGL) grid</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Input: x = array of LGL nodes on [-1,1] (computed by xwlgl)</span>
+0010 <span class="comment">%        np = number of LGL nodes (=n+1, n=polynomial interpolation degree)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Output: D = spectral derivative matrix: formula  (2.3.28), pag. 80 CHQZ2</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0015 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0016 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0017 
+0018 <span class="comment">%   Written by Paola Gervasio</span>
+0019 <span class="comment">%   $Date: 2007/04/01$</span>
+0020  
+0021 
+0022 d=zeros(np);
+0023 n=np-1; 
+0024 <span class="keyword">for</span> j =1:np
+0025    lnxj = <a href="pnleg.html" class="code" title="function [p] = pnleg (x, n)">pnleg</a>(x(j),n);    
+0026    <span class="keyword">for</span> i = 1:np       
+0027       <span class="keyword">if</span> i ~= j          
+0028          lnxi = <a href="pnleg.html" class="code" title="function [p] = pnleg (x, n)">pnleg</a>(x(i),n);
+0029          d(i,j) = lnxi/((x(i)-x(j))*lnxj);                 
+0030       <span class="keyword">end</span>       
+0031    <span class="keyword">end</span> 
+0032 <span class="keyword">end</span> 
+0033 d(1,1) = -0.25*n*np; 
+0034 d(np,np) = -d (1,1); 
+0035  
+0036 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

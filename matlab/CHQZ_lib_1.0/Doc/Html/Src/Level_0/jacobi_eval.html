@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of jacobi_eval</title>
+  <meta name="keywords" content="jacobi_eval">
+  <meta name="description" content="JACOBI_EVAL: Evaluates Jacobi polynomial P_n^{(\alpha,\beta)} at x\in(-1,1)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_0</a> &gt; jacobi_eval.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_0&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>jacobi_eval
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>JACOBI_EVAL: Evaluates Jacobi polynomial P_n^{(\alpha,\beta)} at x\in(-1,1)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [p,pd] = jacobi_eval(x,n,alpha,beta) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> JACOBI_EVAL: Evaluates Jacobi polynomial P_n^{(\alpha,\beta)} at x\in(-1,1)
+
+              (formula (2.5.3) pag. 92, CHQZ2)
+  [p,pd] = jacobi_eval(x,n,alpha,beta) 
+
+ Input: x = scalar or one-dimensional array of length (m) 
+        n =  polynomial degree
+        alpha, beta= parameters of Jacoby polynomial
+
+ Output: p(m,3) = [P_n^{(\alpha,\beta)}(x),
+                   P_(n-1)^{(\alpha,\beta)}(x),
+                   P_(n-2)^{(\alpha,\beta)}(x)];
+
+         pd(m,3) = [(P_n^{(\alpha,\beta)})'(x),
+                    (P_(n-1)^{(\alpha,\beta)})'(x),
+                    (P_(n-2)^{(\alpha,\beta)})'(x)];
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="chebyshev_pol.html" class="code" title="">chebyshev_pol</a>	CHEBYSHEV_POL  plots Chebyshev polynomials for n=0,...,4</li><li><a href="derlg.html" class="code" title="function [d] = derlg(x,np)">derlg</a>	DERLG      Spectral (Legendre Gauss) derivative matrix</li><li><a href="intlag_cgl.html" class="code" title="function [a]=intlag_cgl(x_cgl, x_new);">intlag_cgl</a>	INTLAG_CGL  Computes matrix "a" to evaluate 1D Lagrange interpolant at CGL</li><li><a href="jacobi_pol.html" class="code" title="">jacobi_pol</a>	JACOBI_POL  Script for plotting some Jacobi polynomials for n=4</li><li><a href="jacobi_roots.html" class="code" title="function [x,flag] = jacobi_roots(n,alpha,beta)">jacobi_roots</a>	JACOBI_ROOTS: Computes the n zeros of the Jacoby polynomial P_n^{(\alpha,\beta)}(x)</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [p,pd] = jacobi_eval(x,n,alpha,beta) </a>
+0002 <span class="comment">% JACOBI_EVAL: Evaluates Jacobi polynomial P_n^{(\alpha,\beta)} at x\in(-1,1)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%              (formula (2.5.3) pag. 92, CHQZ2)</span>
+0005 <span class="comment">%  [p,pd] = jacobi_eval(x,n,alpha,beta)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Input: x = scalar or one-dimensional array of length (m)</span>
+0008 <span class="comment">%        n =  polynomial degree</span>
+0009 <span class="comment">%        alpha, beta= parameters of Jacoby polynomial</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Output: p(m,3) = [P_n^{(\alpha,\beta)}(x),</span>
+0012 <span class="comment">%                   P_(n-1)^{(\alpha,\beta)}(x),</span>
+0013 <span class="comment">%                   P_(n-2)^{(\alpha,\beta)}(x)];</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%         pd(m,3) = [(P_n^{(\alpha,\beta)})'(x),</span>
+0016 <span class="comment">%                    (P_(n-1)^{(\alpha,\beta)})'(x),</span>
+0017 <span class="comment">%                    (P_(n-2)^{(\alpha,\beta)})'(x)];</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0020 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0021 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0022 
+0023 <span class="comment">%   Written by Paola Gervasio</span>
+0024 <span class="comment">%   $Date: 2007/04/01$</span>
+0025 
+0026 apb=alpha+beta; ab2=alpha^2-beta^2; 
+0027 
+0028 nn=length(x);
+0029 <span class="keyword">if</span> nn==1
+0030 <span class="comment">% x is a scalar</span>
+0031 p=1;   pd=0; 
+0032 p1=0;  pd1=0;
+0033 p2=0;  pd2=0;
+0034 <span class="keyword">if</span> n == 0    
+0035    <span class="keyword">return</span> 
+0036 <span class="keyword">elseif</span> n==1
+0037 p1 = p; p2=p1;
+0038 p = (alpha-beta+(apb+2)*x)*0.5; 
+0039 
+0040 pd1 = pd; pd2=pd1;
+0041 pd = 0.5*(apb+2); 
+0042 <span class="keyword">else</span>
+0043 p1 = p; p2=p1;
+0044 p = (alpha-beta+(apb+2)*x)*0.5; 
+0045 
+0046 pd1 = pd; pd2=pd1;
+0047 pd = 0.5*(apb+2); 
+0048 <span class="keyword">for</span> k = 1:n-1 
+0049    k1=k+1; k2=k*2; k2ab=k2+alpha+beta;
+0050    k2ab1=k2ab+1; k2ab2=k2ab1+1;
+0051    p2=p1; p1=p; 
+0052    pd2=pd1; pd1=pd; 
+0053    a1 = 2*k1*(k1+apb)*k2ab; 
+0054 <span class="comment">% Gamma(x+n)/Gamma(x) = (x+n-1) * ... * (x+1) * x</span>
+0055    a21 = k2ab1*ab2;
+0056    a22 = k2ab2*k2ab1*k2ab; 
+0057    a3=2*(k+alpha)*(k+beta)*k2ab2;
+0058    p = ((a21+a22*x)*p1-a3*p2)/a1; 
+0059    pd= (a22*p1+(a21+a22*x)*pd1-a3*pd2)/a1; 
+0060 <span class="keyword">end</span> 
+0061 <span class="keyword">end</span>
+0062 
+0063 <span class="keyword">else</span>
+0064 <span class="comment">% x is an array</span>
+0065 
+0066 [m1,m2]=size(x);
+0067 <span class="keyword">if</span> m1&lt;m2
+0068     x=x';
+0069 <span class="keyword">end</span>
+0070 m=max(m1,m2);
+0071 p=[ones(m,1),zeros(m,1),zeros(m,1)];   pd=zeros(m,3); 
+0072 <span class="keyword">if</span> n == 0    
+0073    <span class="keyword">return</span> 
+0074 <span class="keyword">elseif</span> n==1
+0075 p(:,2) = p(:,1); p(:,3)=p(:,2);
+0076 p(:,1) = (alpha-beta+(apb+2)*x)*0.5; 
+0077 
+0078 pd(:,2) = pd(:,1); pd(:,3)=pd(:,2);
+0079 pd(:,1) = 0.5*(apb+2); 
+0080 <span class="keyword">else</span>
+0081 p(:,2) = p(:,1); p(:,3)=p(:,2);
+0082 p(:,1) = (alpha-beta+(apb+2)*x)*0.5; 
+0083 
+0084 pd(:,2) = pd(:,1); pd(:,3)=pd(:,2);
+0085 pd(:,1) = 0.5*(apb+2);     
+0086 <span class="keyword">for</span> k = 1:n-1 
+0087     k2=k*2; k2ab=k2+alpha+beta;
+0088    p(:,3)=p(:,2); p(:,2)=p(:,1); 
+0089    pd(:,3)=pd(:,2); pd(:,2)=pd(:,1); 
+0090    a1 = 2*(k+1)*(k+apb+1)*k2ab; 
+0091 <span class="comment">% Gamma(x+n)/Gamma(x) = (x+n-1) * ... * (x+1) * x</span>
+0092    a21 = (k2ab+1)*ab2;
+0093    a22 = (k2ab+2)*(k2ab+1)*k2ab; 
+0094    a3=2*(k+alpha)*(k+beta)*(k2ab+2);
+0095    p(:,1) = ((a21+a22*x).*p(:,2)-a3*p(:,3))/a1; 
+0096    pd(:,1)= (a22*p(:,2)+(a21+a22*x).*pd(:,2)-a3*pd(:,3))/a1; 
+0097 <span class="keyword">end</span> 
+0098 <span class="keyword">end</span>
+0099 
+0100 <span class="keyword">end</span>
+0101 <span class="keyword">return</span> 
+0102  
+0103</pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

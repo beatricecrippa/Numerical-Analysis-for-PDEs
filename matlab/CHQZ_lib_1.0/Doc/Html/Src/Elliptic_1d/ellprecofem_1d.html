@@ -1,0 +1,377 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ellprecofem_1d</title>
+  <meta name="keywords" content="ellprecofem_1d">
+  <meta name="description" content="ELLPRECOFEM_1D  FEM-preconditioned SEM-appx of 1D second order b.v.p.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Elliptic_1d</a> &gt; ellprecofem_1d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_1d&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>ellprecofem_1d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>ELLPRECOFEM_1D  FEM-preconditioned SEM-appx of 1D second order b.v.p.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [xy,un,A,M,AFE,MFE,MFEd,d,kappa,param]=ellprecofem_1d(xa,xb,nu,beta, gam,ff,cb,ub,ne,nx,param); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> ELLPRECOFEM_1D  FEM-preconditioned SEM-appx of 1D second order b.v.p.
+
+   Numerical solution (or eigenvalues compuation) 
+          of the 1D boundary value problem
+
+     -nu u''+ beta*u' + gam u =f      xa &lt; x &lt; xb
+      Dirichlet or Neumann boundary conditions
+    
+ by Galerkin Numerical Integration with LGL quadrature formulas
+    preconditioner by FEM matrices
+
+ Useful to reproduce results on iterative condition numbers (1D case) 
+ published in Ch4. of CHQZ2.
+
+    
+  [xy,un,A,M,AFE,MFE,MFEd,d,kappa,param]=ellprecofem_1d(xa,xb,nu,...
+        beta, gam,ff,cb,ub,ne,nx,param);
+
+ Input: xa, xb = extrema of computational domain Omega=(xa,xb)
+      nu   = viscosity (constant&gt;0)
+      beta  = coefficient of first order term (constant)
+      gam   = coefficient of zeroth order term (constant&gt;=0)
+      ff  = r.h.s. solution (ff=@(x)[ff(x)], with .*, .^, ./)
+      cb = string containing boundary conditions, for example
+           cb='dn' imposes Dirichlet in xa and Neumann in xb,
+           possible b.c.: Dirichlet, Neumann
+      ub = 2 components array with Dirichlet, Neumann (pure derivative) 
+           data in xa and in xb
+      ne = number of elements (equally spaced)
+      nx = polynomial degree in each element (the same in each element)
+             to be set only if p=4, otherwise, nx=p;
+
+      param = parameters array :
+    param(1)= choice of the preconditioner:
+             0 : P=I
+                 A=K_GNI
+             1 : P=K_FE            (4.4.45), pag. 221, CHQZ2
+                 A=K_GNI
+             2 : P=M_FE^{-1}K_FE   (4.4.46), pag. 221, CHQZ2
+                 A=M_GNI^{-1}K_GNI
+             3 : P=M_FE,d^{-1}K_FE   (4.4.47), pag. 221, CHQZ2
+                 A=M_GNI^{-1}K_GNI
+             4 : P=M_FE^{-1/2}K_FE M_FE^{-1/2}  (4.4.48), pag. 221, CHQZ2
+                 A=M_GNI^{-1/2}K_GNI M_GNI^{-1/2}
+             5 : P=KM_FE&lt;d^{-1/2}K_FE M_FE,d^{-1/2}_FE (4.4.49), pag. 221, CHQZ2
+                 A=M_GNI^{-1/2}K_GNI M_GNI^{-1/2}
+    param(2)= choice of the solver:
+             1 : Conjugate Gradient, only for symmetric preconditioners:
+                 usable only if param(1)=1, 4, 5
+             2 : Bi-CGStab (VDV), usable for any choice of param(1)
+            11 : eigenvalues computation, to have iterative condition 
+                 number 
+                 kapit(P^{-1}A)=|lambda_max(P^{-1}A)|/|lambda_min(P^{-1}A)| 
+            12 : singular values computation, to have 2-norm condition 
+                 number
+                 k_2(P^{-1}A)=sigma_max(P^{-1}A)/sigma_min(P^{-1}A)
+    param(3) = tolerance for the solver: 
+               stopping test is: ||r^k||_2/||r^0||_2 &lt; tol
+               (not used if param(2)=11 | param(2)=12)
+    param(4) = maximum iteration number for the solver
+               (not used if param(2)=11 | param(2)=12)
+
+
+ Output: xy = 1D mesh
+         un = numerical solution 
+         A = Stiffness matrix K_GNI (formula (4.4.43), pag. 219 CHQZ2)
+         M = Mass matrix K_GNI (formula (4.4.43), pag. 219 CHQZ2)
+         AFE = FEM Stiffness matrix K_FE (Tab. 4.6, pag. 221, CHQZ2)
+         MFE = FEM Mass matrix (Tab. 4.6, pag. 221, CHQZ2)
+         MFE = FEM Mass matrix with numerical integration 
+                      (Tab. 4.6, pag. 221, CHQZ2)
+         d = eigenvalues or singular values of the preconditioned matrix
+         kappa = iterative or 2-norm condition number (if param(2)=11, 12)
+         param(11) = iterations required by the solver
+         param(12) = residual at the last iterations
+         
+
+ References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.
+             VDV = van der Vorst, Henk A.,
+                   &quot;Iterative Krylov methods for large linear systems&quot;
+                   Cambridge Monographs on Applied and Computational Mathematics, 13. 
+                   Cambridge University Press, Cambridge,  2003.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="femp1_preco_1d.html" class="code" title="function [AFE,MFE,MFEd]=femp1_preco_1d(npdx,ne,nov,jacx,xy,nu,beta,gam,param);">femp1_preco_1d</a>	FEMP1_PRECO_1D   P1 (stiffness and mass) matrices for  2-nd order 1D b.v.p.</li><li><a href="pbcgstab_vdv.html" class="code" title="function [u,iter,err]=pbcgstab_vdv(A, b, u, tol, maxit ,P,preco);">pbcgstab_vdv</a>	PBCGSTAB_VDV Preconditioned BiCGStab method with FEM preconditioners</li><li><a href="precg.html" class="code" title="function [x,iter,res]=precg(A, b, x0, tol, itmax,P,preco)">precg</a>	PRECG Preconditioned Conjugate Gradient method with FEM preconditioners</li><li><a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>	DERLGL      Spectral (Legendre Gauss Lobatto) derivative matrix</li><li><a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>	XWLGL Computes nodes and weights of the Legendre-Gauss-Lobatto quadrature formula.</li><li><a href="../../Src/Level_1/ad_1d_se.html" class="code" title="function [A]=ad_1d_se(npdx,ne,nov,nu,beta,wx,dx,jacx);">ad_1d_se</a>	AD_1D_SE Assembles 1D global SEM matrix associated to ad operator -nu u'' + beta u'</li><li><a href="../../Src/Level_1/cosnov_1d.html" class="code" title="function [nov]=cosnov_1d(npdx,ne,nov);">cosnov_1d</a>	COSNOV_1D : Constructs the 1D (local mesh ---> global mesh) map</li><li><a href="../../Src/Level_1/mesh_1d.html" class="code" title="function[xx,jacx,xy,ww]=mesh_1d(xa,xb,ne,npdx,nov,x,wx)">mesh_1d</a>	MESH_1D   Generates uniform 1D Spectral elements mesh</li><li><a href="../../Src/Level_1/stiff_1d_se.html" class="code" title="function [A]=stiff_1d_se(npdx,ne,nov,wx,dx,jacx);">stiff_1d_se</a>	STIFF_1D_SE Assembles 1D global SEM matrix associated to  ((phi_j)', (phi_i)')</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="call_ellprecofem_1d.html" class="code" title="">call_ellprecofem_1d</a>	CALL_ELLPRECOFEM_1D Script to set data for calling ellprecofem_1d.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [xy,un,A,M,AFE,MFE,MFEd,d,kappa,param]=ellprecofem_1d(xa,xb,nu,</a><span class="keyword">...</span>
+0002     beta, gam,ff,cb,ub,ne,nx,param);
+0003 <span class="comment">% ELLPRECOFEM_1D  FEM-preconditioned SEM-appx of 1D second order b.v.p.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   Numerical solution (or eigenvalues compuation)</span>
+0006 <span class="comment">%          of the 1D boundary value problem</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%     -nu u''+ beta*u' + gam u =f      xa &lt; x &lt; xb</span>
+0009 <span class="comment">%      Dirichlet or Neumann boundary conditions</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% by Galerkin Numerical Integration with LGL quadrature formulas</span>
+0012 <span class="comment">%    preconditioner by FEM matrices</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Useful to reproduce results on iterative condition numbers (1D case)</span>
+0015 <span class="comment">% published in Ch4. of CHQZ2.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%  [xy,un,A,M,AFE,MFE,MFEd,d,kappa,param]=ellprecofem_1d(xa,xb,nu,...</span>
+0019 <span class="comment">%        beta, gam,ff,cb,ub,ne,nx,param);</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Input: xa, xb = extrema of computational domain Omega=(xa,xb)</span>
+0022 <span class="comment">%      nu   = viscosity (constant&gt;0)</span>
+0023 <span class="comment">%      beta  = coefficient of first order term (constant)</span>
+0024 <span class="comment">%      gam   = coefficient of zeroth order term (constant&gt;=0)</span>
+0025 <span class="comment">%      ff  = r.h.s. solution (ff=@(x)[ff(x)], with .*, .^, ./)</span>
+0026 <span class="comment">%      cb = string containing boundary conditions, for example</span>
+0027 <span class="comment">%           cb='dn' imposes Dirichlet in xa and Neumann in xb,</span>
+0028 <span class="comment">%           possible b.c.: Dirichlet, Neumann</span>
+0029 <span class="comment">%      ub = 2 components array with Dirichlet, Neumann (pure derivative)</span>
+0030 <span class="comment">%           data in xa and in xb</span>
+0031 <span class="comment">%      ne = number of elements (equally spaced)</span>
+0032 <span class="comment">%      nx = polynomial degree in each element (the same in each element)</span>
+0033 <span class="comment">%             to be set only if p=4, otherwise, nx=p;</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%      param = parameters array :</span>
+0036 <span class="comment">%    param(1)= choice of the preconditioner:</span>
+0037 <span class="comment">%             0 : P=I</span>
+0038 <span class="comment">%                 A=K_GNI</span>
+0039 <span class="comment">%             1 : P=K_FE            (4.4.45), pag. 221, CHQZ2</span>
+0040 <span class="comment">%                 A=K_GNI</span>
+0041 <span class="comment">%             2 : P=M_FE^{-1}K_FE   (4.4.46), pag. 221, CHQZ2</span>
+0042 <span class="comment">%                 A=M_GNI^{-1}K_GNI</span>
+0043 <span class="comment">%             3 : P=M_FE,d^{-1}K_FE   (4.4.47), pag. 221, CHQZ2</span>
+0044 <span class="comment">%                 A=M_GNI^{-1}K_GNI</span>
+0045 <span class="comment">%             4 : P=M_FE^{-1/2}K_FE M_FE^{-1/2}  (4.4.48), pag. 221, CHQZ2</span>
+0046 <span class="comment">%                 A=M_GNI^{-1/2}K_GNI M_GNI^{-1/2}</span>
+0047 <span class="comment">%             5 : P=KM_FE&lt;d^{-1/2}K_FE M_FE,d^{-1/2}_FE (4.4.49), pag. 221, CHQZ2</span>
+0048 <span class="comment">%                 A=M_GNI^{-1/2}K_GNI M_GNI^{-1/2}</span>
+0049 <span class="comment">%    param(2)= choice of the solver:</span>
+0050 <span class="comment">%             1 : Conjugate Gradient, only for symmetric preconditioners:</span>
+0051 <span class="comment">%                 usable only if param(1)=1, 4, 5</span>
+0052 <span class="comment">%             2 : Bi-CGStab (VDV), usable for any choice of param(1)</span>
+0053 <span class="comment">%            11 : eigenvalues computation, to have iterative condition</span>
+0054 <span class="comment">%                 number</span>
+0055 <span class="comment">%                 kapit(P^{-1}A)=|lambda_max(P^{-1}A)|/|lambda_min(P^{-1}A)|</span>
+0056 <span class="comment">%            12 : singular values computation, to have 2-norm condition</span>
+0057 <span class="comment">%                 number</span>
+0058 <span class="comment">%                 k_2(P^{-1}A)=sigma_max(P^{-1}A)/sigma_min(P^{-1}A)</span>
+0059 <span class="comment">%    param(3) = tolerance for the solver:</span>
+0060 <span class="comment">%               stopping test is: ||r^k||_2/||r^0||_2 &lt; tol</span>
+0061 <span class="comment">%               (not used if param(2)=11 | param(2)=12)</span>
+0062 <span class="comment">%    param(4) = maximum iteration number for the solver</span>
+0063 <span class="comment">%               (not used if param(2)=11 | param(2)=12)</span>
+0064 <span class="comment">%</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">% Output: xy = 1D mesh</span>
+0067 <span class="comment">%         un = numerical solution</span>
+0068 <span class="comment">%         A = Stiffness matrix K_GNI (formula (4.4.43), pag. 219 CHQZ2)</span>
+0069 <span class="comment">%         M = Mass matrix K_GNI (formula (4.4.43), pag. 219 CHQZ2)</span>
+0070 <span class="comment">%         AFE = FEM Stiffness matrix K_FE (Tab. 4.6, pag. 221, CHQZ2)</span>
+0071 <span class="comment">%         MFE = FEM Mass matrix (Tab. 4.6, pag. 221, CHQZ2)</span>
+0072 <span class="comment">%         MFE = FEM Mass matrix with numerical integration</span>
+0073 <span class="comment">%                      (Tab. 4.6, pag. 221, CHQZ2)</span>
+0074 <span class="comment">%         d = eigenvalues or singular values of the preconditioned matrix</span>
+0075 <span class="comment">%         kappa = iterative or 2-norm condition number (if param(2)=11, 12)</span>
+0076 <span class="comment">%         param(11) = iterations required by the solver</span>
+0077 <span class="comment">%         param(12) = residual at the last iterations</span>
+0078 <span class="comment">%</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">% References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0081 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0082 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0083 <span class="comment">%             VDV = van der Vorst, Henk A.,</span>
+0084 <span class="comment">%                   &quot;Iterative Krylov methods for large linear systems&quot;</span>
+0085 <span class="comment">%                   Cambridge Monographs on Applied and Computational Mathematics, 13.</span>
+0086 <span class="comment">%                   Cambridge University Press, Cambridge,  2003.</span>
+0087 
+0088 <span class="comment">%   Written by Paola Gervasio</span>
+0089 <span class="comment">%   $Date: 2007/04/01$</span>
+0090 
+0091 <span class="comment">% check if the choice for the  preconditioner and the solver are  compatible</span>
+0092 xy=[];un=[];A=[];M=[];AFE=[];MFE=[];MFEd=[];d=[];kappa=1;
+0093 
+0094 <span class="keyword">if</span> param(2)==1
+0095     <span class="keyword">if</span>(param(1)==2 | param(1)==3)
+0096 fprintf(<span class="string">' The choice for the  preconditioner and the solver are not compatible\n'</span>);
+0097 <span class="keyword">return</span>
+0098     <span class="keyword">end</span>
+0099 <span class="keyword">end</span>
+0100 
+0101 
+0102 npdx=nx+1;
+0103 
+0104 [x,wx]=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdx); dx=<a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>(x,npdx);
+0105 
+0106 <span class="comment">% nov</span>
+0107 ldnov=npdx; nov=zeros(ldnov,ne);
+0108 [nov]=<a href="../../Src/Level_1/cosnov_1d.html" class="code" title="function [nov]=cosnov_1d(npdx,ne,nov);">cosnov_1d</a>(npdx,ne,nov);
+0109 noe=nov(npdx,ne);
+0110 
+0111 <span class="comment">% Uniform decomposition of  Omega in ne elements</span>
+0112 
+0113 [xx,jacx,xy,ww]=<a href="../../Src/Level_1/mesh_1d.html" class="code" title="function[xx,jacx,xy,ww]=mesh_1d(xa,xb,ne,npdx,nov,x,wx)">mesh_1d</a>(xa,xb,ne,npdx,nov,x,wx);
+0114 
+0115 <span class="comment">% ww contains the diagonal of the mass matrix</span>
+0116 
+0117 <span class="comment">% G-NI  Stiffness and Mass Matrices assembling</span>
+0118 <span class="keyword">if</span> beta==0
+0119 A=<a href="../../Src/Level_1/stiff_1d_se.html" class="code" title="function [A]=stiff_1d_se(npdx,ne,nov,wx,dx,jacx);">stiff_1d_se</a>(npdx,ne,nov,wx,dx,jacx); 
+0120 A=nu*A;
+0121 <span class="keyword">else</span>
+0122 A=<a href="../../Src/Level_1/ad_1d_se.html" class="code" title="function [A]=ad_1d_se(npdx,ne,nov,nu,beta,wx,dx,jacx);">ad_1d_se</a>(npdx,ne,nov,nu,beta,wx,dx,jacx); 
+0123 <span class="keyword">end</span>    
+0124 M=spdiags(ww,0,noe,noe);
+0125 <span class="keyword">if</span> gam ~=0
+0126     A=A+gam*M;
+0127 <span class="keyword">end</span>
+0128 <span class="comment">% Right hand side</span>
+0129 f=(ff(xy)).*ww;
+0130 
+0131 <span class="comment">% Setting Dirichlet boundary conditions on the matrix on r.h.s</span>
+0132 <span class="keyword">if</span> cb(1)==<span class="string">'d'</span>
+0133 f(1)=ub(1); i1=2;
+0134 <span class="keyword">elseif</span> cb(1)==<span class="string">'n'</span>
+0135 f(1)=f(1)-nu*ub(1);i1=1;
+0136 <span class="keyword">end</span>
+0137 <span class="keyword">if</span> cb(2)==<span class="string">'d'</span>; 
+0138 f(noe)=ub(2);i2=noe-1;
+0139 <span class="keyword">elseif</span> cb(2)==<span class="string">'n'</span>
+0140 f(noe)=f(noe)+nu*ub(2);i2=noe;
+0141 <span class="keyword">end</span>
+0142    
+0143     
+0144 
+0145 <span class="comment">% Reduce the system to non-Dirichlet unknowns</span>
+0146 lint=(i1:i2);
+0147 <span class="keyword">if</span> cb==<span class="string">'dd'</span>
+0148 f(lint)=f(lint)-A(lint,1)*ub(1)-A(lint,noe)*ub(2);
+0149 <span class="keyword">elseif</span> cb==<span class="string">'dn'</span>
+0150 f(lint)=f(lint)-A(lint,1)*ub(1);
+0151 <span class="keyword">elseif</span> cb==<span class="string">'nd'</span>
+0152 f(lint)=f(lint)-A(lint,noe)*ub(2);    
+0153 <span class="keyword">end</span>
+0154 
+0155 f=f(lint);
+0156 noeint=i2-i1+1;
+0157 
+0158 <span class="keyword">if</span> param(1)~=0
+0159 <span class="comment">% FEM  Stiffness and Mass Matrices assembling</span>
+0160 [AFE,MFE,MFEd]=<a href="femp1_preco_1d.html" class="code" title="function [AFE,MFE,MFEd]=femp1_preco_1d(npdx,ne,nov,jacx,xy,nu,beta,gam,param);">femp1_preco_1d</a>(npdx,ne,nov,jacx,xy,nu,beta,gam,param);
+0161 
+0162 <span class="comment">% Setting Dirichlet boundary conditions on the preconditioned stiffness matrix</span>
+0163 
+0164 AFE=AFE(lint,lint);
+0165 MFE=MFE(lint,lint);
+0166 MFEd=MFEd(lint,lint);
+0167 <span class="keyword">end</span>
+0168 A=A(lint,lint);
+0169 M=M(lint,lint);
+0170 
+0171 <span class="comment">% Pre solver</span>
+0172 <span class="keyword">if</span> param(1)==0
+0173     P=speye(noeint);
+0174     A1=A;f1=f;
+0175 <span class="keyword">elseif</span> param(1)==1
+0176     P=AFE;
+0177     A1=A;f1=f;
+0178 <span class="keyword">elseif</span> param(1)==2 
+0179     P=M*inv(MFE)*AFE;
+0180     A1=A;f1=f;
+0181 <span class="keyword">elseif</span> param(1)==3
+0182     P=M*inv(MFEd)*AFE;
+0183     A1=A;f1=f;
+0184 <span class="keyword">elseif</span> param(1)==4 
+0185     MFE1=full(MFE);MFE1=sqrtm(MFE1);MFE1=inv(MFE1);
+0186     M1=inv(sqrt(M));
+0187     P=MFE1'*AFE*MFE1;
+0188     A1=M1*A*M1;
+0189     f1=M1*f;
+0190 <span class="keyword">elseif</span> param(1)==5   
+0191     MFEd1=inv(sqrt(MFEd)); 
+0192     M1=inv(sqrt(M));
+0193     P=MFEd1*AFE*MFEd1;
+0194     A1=M1*A*M1;
+0195     f1=M1*f;
+0196 <span class="keyword">end</span>
+0197 
+0198 <span class="comment">% solve the linear system</span>
+0199 
+0200 u0=zeros(noeint,1);
+0201 
+0202 <span class="keyword">if</span> param(2)==1
+0203     <span class="comment">% CG to solve linear system</span>
+0204 [un,iter,res]=<a href="precg.html" class="code" title="function [x,iter,res]=precg(A, b, x0, tol, itmax,P,preco)">precg</a>(A1, f1, u0, param(3), param(4),P,param(1));
+0205 <span class="keyword">if</span> param(1)==4 | param(1)==5
+0206     un=M1*un;
+0207 <span class="keyword">end</span>
+0208 <span class="keyword">if</span> cb==<span class="string">'dd'</span>
+0209 un=[ub(1);un;ub(2)];
+0210 <span class="keyword">elseif</span> cb==<span class="string">'dn'</span>
+0211 un=[ub(1);un];
+0212 <span class="keyword">elseif</span> cb==<span class="string">'nd'</span>
+0213 un=[un;ub(2)];
+0214 <span class="keyword">end</span>
+0215 param(11:12)=[iter,res];
+0216 
+0217 <span class="keyword">elseif</span> param(2)==2
+0218     <span class="comment">% Bicgstab to solve linear system</span>
+0219 [un,iter,res]=<a href="pbcgstab_vdv.html" class="code" title="function [u,iter,err]=pbcgstab_vdv(A, b, u, tol, maxit ,P,preco);">pbcgstab_vdv</a>(A1, f1, u0, param(3), param(4),P,param(1));
+0220 
+0221 <span class="keyword">if</span> param(1)==4 | param(1)==5
+0222     un=M1*un;
+0223 <span class="keyword">end</span>
+0224 <span class="keyword">if</span> cb==<span class="string">'dd'</span>
+0225 un=[ub(1);un;ub(2)];
+0226 <span class="keyword">elseif</span> cb==<span class="string">'dn'</span>
+0227 un=[ub(1);un];
+0228 <span class="keyword">elseif</span> cb==<span class="string">'nd'</span>
+0229 un=[un;ub(2)];
+0230 <span class="keyword">end</span>
+0231 param(11:12)=[iter,res];
+0232 
+0233 <span class="keyword">elseif</span> param(2)==11
+0234 <span class="comment">% compute eigenvalues and the iterative condition number</span>
+0235 C=inv(P)*A1;
+0236 OPTS.disp=0;
+0237 d1=eigs(C,3,<span class="string">'LM'</span>,OPTS);d2=eigs(C,3,<span class="string">'SM'</span>,OPTS);
+0238 kappa=max(abs(d1))/min(abs(d2));
+0239 <span class="keyword">elseif</span> param(2)==12
+0240 <span class="comment">% compute singular values and the 2-norm condition number</span>
+0241 C=inv(P)*A1;
+0242 OPTS.disp=0;
+0243 d1=svds(C,3,<span class="string">'L'</span>,OPTS);d2=svds(C,3,0,OPTS);
+0244 kappa=max(d1)/min(d2);
+0245 <span class="keyword">end</span>
+0246 <span class="keyword">return</span>    
+0247     
+0248</pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

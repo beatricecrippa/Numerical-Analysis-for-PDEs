@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of der2lgl</title>
+  <meta name="keywords" content="der2lgl">
+  <meta name="description" content="DER2LGL      Spectral (Legendre Gauss Lobatto) second derivative matrix">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_0</a> &gt; der2lgl.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_0&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>der2lgl
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>DER2LGL      Spectral (Legendre Gauss Lobatto) second derivative matrix</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [d] = der2lgl(x,np) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DER2LGL      Spectral (Legendre Gauss Lobatto) second derivative matrix 
+
+    [d]=der2lgl(x,np) returns the spectral derivative
+    matrix d at the np LGL nodex X (in [-1,1]). np-1 is the polynomial
+    degree used. Legendre Gauss Lobatto (LGL) grid
+
+
+ Input: x = array of LGL nodes on [-1,1] (computed by xwlgl)
+        np = number of LGL nodes (=n+1, n=polynomial interpolation degree)
+
+ Output: d = spectral second derivative matrix: formula (2.3.29), pag. 80 CHQZ2
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="pnleg.html" class="code" title="function [p] = pnleg (x, n)">pnleg</a>	PNLEG      Evaluates Legendre polynomial of degree n at x</li><li><a href="pnleg2.html" class="code" title="function [p2,p1,p] = pnleg2 (x, n)">pnleg2</a>	PNLEG2    Evaluates the second derivative of Legendre polynomial</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="test.html" class="code" title="">test</a>	TEST Script for testing functions of this directory</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [d] = der2lgl(x,np) </a>
+0002 <span class="comment">% DER2LGL      Spectral (Legendre Gauss Lobatto) second derivative matrix</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    [d]=der2lgl(x,np) returns the spectral derivative</span>
+0005 <span class="comment">%    matrix d at the np LGL nodex X (in [-1,1]). np-1 is the polynomial</span>
+0006 <span class="comment">%    degree used. Legendre Gauss Lobatto (LGL) grid</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Input: x = array of LGL nodes on [-1,1] (computed by xwlgl)</span>
+0010 <span class="comment">%        np = number of LGL nodes (=n+1, n=polynomial interpolation degree)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Output: d = spectral second derivative matrix: formula (2.3.29), pag. 80 CHQZ2</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0015 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0016 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0017 
+0018 <span class="comment">%   Written by Paola Gervasio</span>
+0019 <span class="comment">%   $Date: 2007/04/01$</span>
+0020 
+0021 
+0022  
+0023 
+0024 n=np-1; 
+0025 d=zeros(np,np);
+0026 <span class="keyword">for</span> l =1:np
+0027    lnxl = <a href="pnleg.html" class="code" title="function [p] = pnleg (x, n)">pnleg</a>(x(l),n);    
+0028 <span class="keyword">if</span> l~=1
+0029 d(1,l)=(-1)^n/lnxl*(n*np*(1+x(l))-4)*0.5/(1+x(l))^2;
+0030 <span class="keyword">end</span>
+0031    <span class="keyword">for</span> j = 2:n
+0032       <span class="keyword">if</span> j ~= l          
+0033          lnxj = <a href="pnleg.html" class="code" title="function [p] = pnleg (x, n)">pnleg</a>(x(j),n);          
+0034          d(j,l) = -2*lnxj/(lnxl*(x(j)-x(l))^2);          
+0035       <span class="keyword">else</span>          
+0036          d(j,j) = <a href="pnleg2.html" class="code" title="function [p2,p1,p] = pnleg2 (x, n)">pnleg2</a>(x(j),n)/(3*lnxl);
+0037       <span class="keyword">end</span>       
+0038    <span class="keyword">end</span> 
+0039 <span class="keyword">if</span> l~= np
+0040 d(np,l)=1/lnxl*(n*np*(1-x(l))-4)*0.5/(1-x(l))^2;
+0041 <span class="keyword">end</span>
+0042 <span class="keyword">end</span> 
+0043 d(1,1)=n*(n+1)*(n^2+n-2)/24;
+0044 d(np,np)=d(1,1);
+0045  
+0046 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

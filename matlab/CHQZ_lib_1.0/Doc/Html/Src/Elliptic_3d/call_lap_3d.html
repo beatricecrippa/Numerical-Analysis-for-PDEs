@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of call_lap_3d</title>
+  <meta name="keywords" content="call_lap_3d">
+  <meta name="description" content="CALL_LAP_3D Script for pre- and post-processing lap_3d">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Elliptic_3d</a> &gt; call_lap_3d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_3d&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>call_lap_3d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CALL_LAP_3D Script for pre- and post-processing lap_3d</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CALL_LAP_3D Script for pre- and post-processing lap_3d</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="lap_3d.html" class="code" title="function [xyz,un,D,param]=lap_3d(xa,xb,ya,yb,za,zb,gam,uex,uex_x,uex_y,uex_z,ff,nex,nx,ney,ny,nez,nz,gammax,gammay,gammaz,param);">lap_3d</a>	LAP_3D   Numerical solution of the 3D b.v.p. -Delta u + gam u = f</li><li><a href="../../Src/Level_3/setfun_lap_3d.html" class="code" title="function [uex,uexx,uexy,uexz,ff,gam]=setfun_lap_3d">setfun_lap_3d</a>	SETFUN_LAP_3D  Sets functions and coefficients for lap_3d</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% CALL_LAP_3D Script for pre- and post-processing lap_3d</span>
+0002 <span class="comment">%</span>
+0003 
+0004 <span class="comment">%   Written by Paola Gervasio</span>
+0005 <span class="comment">%   $Date: 2007/04/01$</span>
+0006 
+0007 <span class="comment">%</span>
+0008 [uex,uex_x,uex_y,uex_z,ff,gam]=<a href="../../Src/Level_3/setfun_lap_3d.html" class="code" title="function [uex,uexx,uexy,uexz,ff,gam]=setfun_lap_3d">setfun_lap_3d</a>;  <span class="comment">% -Delta u + gam *u =f</span>
+0009 <span class="comment">%</span>
+0010 xa=-1;xb=1;   <span class="comment">% Omega=(xa,xb) x (ya,yb) x (za,zb)</span>
+0011 ya=-1;yb=1;
+0012 za=-1;zb=1;
+0013 errinf=[];errh1=[];errl2=[];gammax=[]; gammay=[]; gammaz=[];
+0014 H=[];
+0015 <span class="keyword">for</span> nex=4;
+0016     ney=nex;  <span class="comment">% decomposition of Omega in nex * ney * nez parallelepipeds</span>
+0017     nez=nex; 
+0018     H=[H;2/nex];
+0019 <span class="keyword">for</span> nx=2:4      <span class="comment">% polynomial degree in each element along x-direction</span>
+0020     ny=nx;    <span class="comment">% polynomial degree in each element along y-direction</span>
+0021     nz=nx;    <span class="comment">% polynomial degree in each element along y-direction</span>
+0022     param=zeros(20,1);  
+0023     param(1)=1;    <span class="comment">% 1=SEM-NI,</span>
+0024     param(2)=0;    <span class="comment">% 0=no reordering, 1=CM ordering, 2=AMD ordering</span>
+0025     param(3)=2;    <span class="comment">% 1= solve linear system by \</span>
+0026                    <span class="comment">% 2= compute extrema eigenvalues of A</span>
+0027                    <span class="comment">% 3 solve by Schur complement</span>
+0028                    <span class="comment">% 4= compute extrema eigenvalues of the Schur complement</span>
+0029                    <span class="comment">% 5= plot eigenvalues of matrix A</span>
+0030                    <span class="comment">% 6: Compute extrema eigenvalues of  M^{-1}A</span>
+0031     param(4)=1;    <span class="comment">% 1 computes errors, 0 no</span>
+0032     param(5)=0;    <span class="comment">% 0 = errors with exact norms, 1= errors with discrete norms</span>
+0033     param(6)=nx*2; <span class="comment">% n. of nodes for LG quadrature formulas</span>
+0034     param(7)=0;    <span class="comment">% 0 =absolute errors, 1=relative errors</span>
+0035     param(8)=0;    <span class="comment">% 0 no plot, 1 mesh, 2 surf, 3 contour</span>
+0036     param(9)=(nx+1); <span class="comment">% nodes used to plot numerical solution</span>
+0037 <span class="comment">%     gammax=[0.2]; gammay=[0.2]; % if SEM decomposition is not uniform:</span>
+0038 <span class="comment">%     gammaz=[0.2];            % they are the arrays with intefaces positions</span>
+0039 
+0040 <span class="comment">% call lap_3d</span>
+0041 
+0042 [xy,un,D,param]=<a href="lap_3d.html" class="code" title="function [xyz,un,D,param]=lap_3d(xa,xb,ya,yb,za,zb,gam,uex,uex_x,uex_y,uex_z,ff,nex,nx,ney,ny,nez,nz,gammax,gammay,gammaz,param);">lap_3d</a>(xa,xb,ya,yb,za,zb,gam,<span class="keyword">...</span>
+0043           uex,uex_x,uex_y,uex_z,ff,nex,nx,ney,ny,nez,nz,gammax,gammay,gammaz,<span class="keyword">...</span>
+0044           param);
+0045 
+0046 <span class="comment">% post</span>
+0047 
+0048 <span class="keyword">if</span> (param(3)==1 | param(3)==3)
+0049 fprintf(<span class="string">'nx=%d,nex=%d,err_inf=%11.4e, err_h1=%11.4e,err_l2=%11.4e \n'</span>,<span class="keyword">...</span>
+0050     nx,nex,param(29),param(30),param(31))
+0051 errinf=[errinf;param(29)];
+0052 errh1=[errh1;param(30)];
+0053 errl2=[errl2;param(31)];
+0054 
+0055 <span class="keyword">elseif</span>(param(3)==2)
+0056 fprintf(<span class="string">'nx=%d,nex=%d,lam_max(A)=%11.4e, lam_min(A)=%11.4e, k(A)=%11.4e \n'</span>,<span class="keyword">...</span>
+0057     nx,nex,param(23),param(24),abs(param(23))/abs(param(24)));
+0058 <span class="keyword">elseif</span>(param(3)==4)
+0059 fprintf(<span class="string">'nx=%d,nex=%d,lam_max(S)=%11.4e, lam_min(S)=%11.4e, k(S)=%11.4e \n'</span>,<span class="keyword">...</span>
+0060     nx,nex,param(25),param(26),abs(param(25))/abs(param(26)));
+0061 <span class="keyword">elseif</span>(param(3)==6)
+0062 fprintf(<span class="string">'nx=%d,nex=%d,lam_max(M^{-1}A)=%11.4e, lam_min(M^{-1}A)=%11.4e, k(M^{-1}A)=%11.4e \n'</span>,<span class="keyword">...</span>
+0063     nx,nex,param(27),param(28),abs(param(27))/abs(param(28)));
+0064 <span class="keyword">end</span>
+0065 
+0066 <span class="keyword">end</span>
+0067 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

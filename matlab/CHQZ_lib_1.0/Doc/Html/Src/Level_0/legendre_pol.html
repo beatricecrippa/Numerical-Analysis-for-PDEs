@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of legendre_pol</title>
+  <meta name="keywords" content="legendre_pol">
+  <meta name="description" content="LEGENDRE_POL  plots Legendre polynomials for n=0,...,4">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_0</a> &gt; legendre_pol.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_0&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>legendre_pol
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>LEGENDRE_POL  plots Legendre polynomials for n=0,...,4</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> LEGENDRE_POL  plots Legendre polynomials for n=0,...,4
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="pnleg_all.html" class="code" title="function [p] = pnleg_all(x,n)">pnleg_all</a>	PNLEG_ALL      Evaluates Legendre polynomials, from degree 0 to n</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% LEGENDRE_POL  plots Legendre polynomials for n=0,...,4</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0004 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0005 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0006 
+0007 <span class="comment">%   Written by Paola Gervasio</span>
+0008 <span class="comment">%   $Date: 2007/04/01$</span>
+0009 
+0010 nx=100;
+0011 x=linspace(-1,1,nx);
+0012 x=x';
+0013 
+0014 <span class="comment">% Legendre</span>
+0015 n=4;
+0016 pn=<a href="pnleg_all.html" class="code" title="function [p] = pnleg_all(x,n)">pnleg_all</a>(x,n);
+0017 
+0018 figure(1);
+0019 clf
+0020 set(gca,<span class="string">'Fontname'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,16);
+0021 plot(x,pn(:,1),<span class="string">'k--'</span>,<span class="string">'Linewidth'</span>,1);
+0022 hold on
+0023 plot(x,pn(:,2),<span class="string">'k'</span>,x,pn(:,3),<span class="string">'k--'</span>,<span class="string">'Linewidth'</span>,1);
+0024 plot(x,pn(:,4),<span class="string">'k-.'</span>,<span class="string">'Linewidth'</span>,1);
+0025 plot(x,pn(:,5),<span class="string">'k:'</span>,<span class="string">'Linewidth'</span>,2);
+0026 xlabel(<span class="string">'x'</span>,<span class="string">'Fontname'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,16);
+0027 set(gca,<span class="string">'PlotBoxAspectRatio'</span>,[3 2 1],<span class="keyword">...</span>
+0028     <span class="string">'Ylimmode'</span>,<span class="string">'manual'</span>,<span class="string">'Ylim'</span>,[-1.2,1.2],<span class="keyword">...</span>
+0029    <span class="string">'Xtickmode'</span>,<span class="string">'manual'</span>,<span class="string">'Xtick'</span>,[-1,-0.5,0,0.5,1],<span class="keyword">...</span>
+0030     <span class="string">'Xgrid'</span>,<span class="string">'on'</span>,<span class="string">'Xminorgrid'</span>,<span class="string">'off'</span>,<span class="keyword">...</span>
+0031     <span class="string">'Ygrid'</span>,<span class="string">'on'</span>,<span class="string">'Yminorgrid'</span>,<span class="string">'off'</span>,<span class="keyword">...</span>
+0032     <span class="string">'Fontname'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,16);</pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

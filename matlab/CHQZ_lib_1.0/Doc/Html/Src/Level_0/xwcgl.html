@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of xwcgl</title>
+  <meta name="keywords" content="xwcgl">
+  <meta name="description" content="XWCGL  Computes nodes and weights of the Chebyshev-Gauss-Lobatto quadrature formula.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_0</a> &gt; xwcgl.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_0&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>xwcgl
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>XWCGL  Computes nodes and weights of the Chebyshev-Gauss-Lobatto quadrature formula.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [x,w] = xwcgl(np,a,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">XWCGL  Computes nodes and weights of the Chebyshev-Gauss-Lobatto quadrature formula.
+
+    [x,w]=xwcgl(np) returns the np weigths and nodes 
+    of the corresponding Chebyshev Gauss-Lobatto quadrature 
+    formula in the reference interval [-1,1].
+
+    [x,w]=xwcgl(np,a,b) returns the NP weigths and the nodes 
+    of the corresponding Chebyshev Gauss-Lobatto quadrature 
+    formula in the  interval [a,b].
+
+ Input: np = number of nodes
+        a, b = extrema of the interval
+
+ Output: x(np,1) = CGL nodes  (CHQZ2, (2.4.14), pag. 86)
+         w(np,1) = CGL weigths (CHQZ2, (2.4.14), pag. 86)
+
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Eigenvalues_1d/fig4_8.html" class="code" title="">fig4_8</a>	FIG4_8  Script to produce Fig 4.8, pag. 201 CHQZ2</li><li><a href="test.html" class="code" title="">test</a>	TEST Script for testing functions of this directory</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [x,w] = xwcgl(np,a,b)</a>
+0002 <span class="comment">%XWCGL  Computes nodes and weights of the Chebyshev-Gauss-Lobatto quadrature formula.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    [x,w]=xwcgl(np) returns the np weigths and nodes</span>
+0005 <span class="comment">%    of the corresponding Chebyshev Gauss-Lobatto quadrature</span>
+0006 <span class="comment">%    formula in the reference interval [-1,1].</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%    [x,w]=xwcgl(np,a,b) returns the NP weigths and the nodes</span>
+0009 <span class="comment">%    of the corresponding Chebyshev Gauss-Lobatto quadrature</span>
+0010 <span class="comment">%    formula in the  interval [a,b].</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Input: np = number of nodes</span>
+0013 <span class="comment">%        a, b = extrema of the interval</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Output: x(np,1) = CGL nodes  (CHQZ2, (2.4.14), pag. 86)</span>
+0016 <span class="comment">%         w(np,1) = CGL weigths (CHQZ2, (2.4.14), pag. 86)</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0020 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0021 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0022 
+0023 <span class="comment">%   Written by Paola Gervasio</span>
+0024 <span class="comment">%   $Date: 2007/04/01$</span>
+0025 
+0026 
+0027 <span class="keyword">if</span> np &lt;= 1 
+0028   es=<span class="string">'The number of the quadrature nodes should be greater than 1'</span>;
+0029   disp(es); x = []; w = [];
+0030   <span class="keyword">return</span> 
+0031 <span class="keyword">end</span> 
+0032 
+0033 n=np-1;
+0034 ww=pi/n;
+0035 w=ww*ones(np,1);
+0036 x(1:np,1)=-cos((0:n)'*ww);
+0037 w(1)=w(1)*.5;
+0038 w(np)=w(1);
+0039 
+0040 <span class="keyword">if</span> nargin ==3
+0041    bma=(b-a)*.5;
+0042    bpa=(b+a)*.5;
+0043    x=bma*x+bpa;
+0044    w=w*bma;
+0045 <span class="keyword">end</span>
+0046 
+0047 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,31 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  ad_1d_se -> ad_1d_sp;
+  adr_1d_se -> adr_1d_sp;
+  ell_1d_se -> ell_1d_sp;
+  errors_1d -> cosnov_1d;
+  errors_1d -> mesh_1d;
+  errors_1d -> normah1_1d;
+  errors_1d -> normal2_1d;
+  matrices_1d -> stiff_1d_se;
+  stiff_1d_se -> stiff_1d_sp;
+
+  ad_1d_se [URL="ad_1d_se.html"];
+  ad_1d_sp [URL="ad_1d_sp.html"];
+  adr_1d_se [URL="adr_1d_se.html"];
+  adr_1d_sp [URL="adr_1d_sp.html"];
+  cosnov_1d [URL="cosnov_1d.html"];
+  ell_1d_se [URL="ell_1d_se.html"];
+  ell_1d_sp [URL="ell_1d_sp.html"];
+  errors_1d [URL="errors_1d.html"];
+  matrices_1d [URL="matrices_1d.html"];
+  mesh_1d [URL="mesh_1d.html"];
+  normah1_1d [URL="normah1_1d.html"];
+  normal2_1d [URL="normal2_1d.html"];
+  plot_sem_1d [URL="plot_sem_1d.html"];
+  setfun_adr_1d [URL="setfun_adr_1d.html"];
+  setfun_ell_1d [URL="setfun_ell_1d.html"];
+  setfun_lap_1d [URL="setfun_lap_1d.html"];
+  stiff_1d_se [URL="stiff_1d_se.html"];
+  stiff_1d_sp [URL="stiff_1d_sp.html"];
+}
