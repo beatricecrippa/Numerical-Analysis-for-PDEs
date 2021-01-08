@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of xwlg</title>
+  <meta name="keywords" content="xwlg">
+  <meta name="description" content="XWLG  Computes nodes and weights of the Legendre-Gauss  quadrature formula.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_0</a> &gt; xwlg.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_0&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>xwlg
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>XWLG  Computes nodes and weights of the Legendre-Gauss  quadrature formula.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [x,w] = xwlg(np,a,b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">XWLG  Computes nodes and weights of the Legendre-Gauss  quadrature formula.
+
+    [x,w]=xwlg(np) returns the np weigths and nodes 
+    of the corresponding Legendre Gauss quadrature 
+    formula in the reference interval (-1,1).
+
+    [x,w]=xwlg(np,a,b) returns the np weigths and the nodes 
+    of the corresponding Legendre Gauss quadrature 
+    formula in the  interval (a,b).
+
+ Input: np = number of nodes
+        a, b = extrema of the interval
+
+ Output: x(np,1) = LG nodes  (CHQZ2, (2.3.10), pag. 76)
+         w(np,1) = LG weigths (CHQZ2, (2.3.10), pag. 76)
+
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="jacobi_roots.html" class="code" title="function [x,flag] = jacobi_roots(n,alpha,beta)">jacobi_roots</a>	JACOBI_ROOTS: Computes the n zeros of the Jacoby polynomial P_n^{(\alpha,\beta)}(x)</li><li><a href="pnleg1.html" class="code" title="function [p1,p] = pnleg1 (x, n)">pnleg1</a>	PNLEG1    Evaluates the first derivative of Legendre polynomial</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Hyperbolic_1d/stag_scalar_hyp.html" class="code" title="function [x,u,err,Psi,Phi]=stag_scalar_hyp(xa,xb,t0,T,beta,uex,u0,ul,nx,deltat)">stag_scalar_hyp</a>	STAG_SCALAR_HYP  Numerical solution of scalar linear hyperbolic equations,</li><li><a href="test.html" class="code" title="">test</a>	TEST Script for testing functions of this directory</li><li><a href="../../Src/Level_1/normah1_1d.html" class="code" title="function [err_h1]=normah1_1d(fdq, nq, errtype, u, uex, uexx,x, wx, dx, xx, jacx, xy,nov)">normah1_1d</a>	NORMAH1_1D   Computes H1-norm in 1D</li><li><a href="../../Src/Level_1/normal2_1d.html" class="code" title="function [err_l2]=normal2_1d(fdq, nq, errtype, u, uex,x, wx, xx, jacx, xy,nov)">normal2_1d</a>	NORMAL2_1D   Computes L2-norm in 1D</li><li><a href="../../Src/Level_2/normah1_2d.html" class="code" title="function [err_h1]=normah1_2d(fdq,nq,errtype,x,wx,dx,xx,jacx,y,wy,dy,yy,jacy,xy,ww,nov,un,u,uex,uex_x,uex_y);">normah1_2d</a>	NORMAH1_2D   Computes H1-norm in 2D</li><li><a href="../../Src/Level_2/normal2_2d.html" class="code" title="function [err_l2]=normal2_2d(fdq,nq,errtype,x,wx,xx,jacx,y,wy,yy,jacy,xy,ww,nov,un,u,uex);">normal2_2d</a>	NORMAL2_2D   Computes L2-norm in 2D</li><li><a href="../../Src/Level_3/normah1_3d.html" class="code" title="function [err_h1]=normah1_3d(fdq,nq,errtype,x,wx,dx,xx,jacx,y,wy,dy,yy,jacy,z,wz,dz,zz,jacz,xyz,ww,nov,un,u,uex,uex_x,uex_y,uex_z);">normah1_3d</a>	NORMAH1_3D   Computes H1-norm in 3D</li><li><a href="../../Src/Level_3/normal2_3d.html" class="code" title="function [err_l2]=normal2_3d(fdq,nq,errtype,x,wx,xx,jacx,y,wy,yy,jacy,z,wz,dz,zz,jacz,xyz,ww,nov,un,u,uex);">normal2_3d</a>	% NORMAL2_3D   Computes L2-norm in 3D</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [x,w] = xwlg(np,a,b)</a>
+0002 <span class="comment">%XWLG  Computes nodes and weights of the Legendre-Gauss  quadrature formula.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    [x,w]=xwlg(np) returns the np weigths and nodes</span>
+0005 <span class="comment">%    of the corresponding Legendre Gauss quadrature</span>
+0006 <span class="comment">%    formula in the reference interval (-1,1).</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%    [x,w]=xwlg(np,a,b) returns the np weigths and the nodes</span>
+0009 <span class="comment">%    of the corresponding Legendre Gauss quadrature</span>
+0010 <span class="comment">%    formula in the  interval (a,b).</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Input: np = number of nodes</span>
+0013 <span class="comment">%        a, b = extrema of the interval</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Output: x(np,1) = LG nodes  (CHQZ2, (2.3.10), pag. 76)</span>
+0016 <span class="comment">%         w(np,1) = LG weigths (CHQZ2, (2.3.10), pag. 76)</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0020 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0021 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0022 
+0023 <span class="comment">%   Written by Paola Gervasio</span>
+0024 <span class="comment">%   $Date: 2007/04/01$</span>
+0025 
+0026 
+0027 n=np-1;
+0028 <span class="keyword">if</span> np&lt;=1
+0029   x=0;w=2;
+0030   <span class="keyword">return</span>
+0031 <span class="keyword">end</span>
+0032 x=<a href="jacobi_roots.html" class="code" title="function [x,flag] = jacobi_roots(n,alpha,beta)">jacobi_roots</a>(np,0,0);
+0033 w=2./(<a href="pnleg1.html" class="code" title="function [p1,p] = pnleg1 (x, n)">pnleg1</a>(x,np).^2.*(1-x.^2));
+0034 
+0035 
+0036 
+0037 <span class="comment">%</span>
+0038 <span class="comment">% map on (a,b)</span>
+0039 <span class="comment">%</span>
+0040 <span class="keyword">if</span> nargin == 3
+0041   bma=(b-a)*.5;
+0042   bpa=(b+a)*.5;
+0043   x=bma*x+bpa;
+0044   w=w*bma;
+0045 <span class="keyword">end</span>
+0046 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

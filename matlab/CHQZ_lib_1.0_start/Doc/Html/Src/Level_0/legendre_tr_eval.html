@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of legendre_tr_eval</title>
+  <meta name="keywords" content="legendre_tr_eval">
+  <meta name="description" content="LEGENDRE_TR_EVAL     Evaluates Discrete Legendre Transform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_0</a> &gt; legendre_tr_eval.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_0&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>legendre_tr_eval
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>LEGENDRE_TR_EVAL     Evaluates Discrete Legendre Transform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [u_int]=legendre_tr_eval(x,u,x_int); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> LEGENDRE_TR_EVAL     Evaluates Discrete Legendre Transform
+
+            formula (4.4.17)  pag. 118, Quarteroni-Valli, Springer 1997
+            with coefficients computed with formula (4.4.18)  
+                   pag. 118, Quarteroni-Valli, Springer 1997
+
+  [u_int]=legendre_tr_eval(x,u,x_int) returns the evaluation at nodes x_int
+       of the expansion of (I_N u)(x) with respect to Legendre polynomials
+
+       (I_n u)(x)=\Sum_{k=0}^n u_k L_k(x)             (*)
+
+       where L_k(x) are the Legendre polynomials
+
+ Input: x = array of np Legendre Gauss Lobatto (LGL) nodes on [-1,1]
+        u = array of np values of u at LGL nodes x : u_j=u(x_j)
+            size(u)=[np,nc], where nc is the number of transforms which
+            should be computed.
+        If u is a 2-indices array, then every column of u is transformed
+        following formula (*)
+        x_int = array of a second set of nodes in [-1,1]
+
+ Output: u_int = array of the values of  the
+              expansion of I_Nu(x) with respect to Legendre polynomials.
+
+ Reference: A. Quarteroni, A. Valli:
+            &quot;Numerical Approximation of Partial Differential Equations&quot;
+            Springer Verlag / 1997 (2nd Ed)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="legendre_tr_coef.html" class="code" title="function [uk]=legendre_tr_coef(x,u);">legendre_tr_coef</a>	LEGENDRE_TR_COEF   Computes Discrete Legendre Transform  coefficients</li><li><a href="pnleg_all.html" class="code" title="function [p] = pnleg_all(x,n)">pnleg_all</a>	PNLEG_ALL      Evaluates Legendre polynomials, from degree 0 to n</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Elliptic_1d/call_ell_1d.html" class="code" title="">call_ell_1d</a>	CALL_ELL_1D Script to produce results of fig. 4.17, pag. 207, CHQZ2</li><li><a href="test.html" class="code" title="">test</a>	TEST Script for testing functions of this directory</li><li><a href="../../Src/Level_1/plot_sem_1d.html" class="code" title="function [ha]=plot_sem_1d(fig,ne,x,wx,xx,jacx,xy,nov,un,n_int);">plot_sem_1d</a>	PLOT_SEM_1D plots SEM numerical solution of 1D boundary value problems</li><li><a href="../../Src/Level_2/plot_sem_2d.html" class="code" title="function [ha]=plot_sem_2d(fig,command,nex,ney,x,xx,jacx,y,yy,jacy,xy,ww,nov,u,n_int);">plot_sem_2d</a>	PLOT_SEM_2D Plots SEM numerical solution of 2D boundary value problems</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [u_int]=legendre_tr_eval(x,u,x_int);</a>
+0002 <span class="comment">% LEGENDRE_TR_EVAL     Evaluates Discrete Legendre Transform</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%            formula (4.4.17)  pag. 118, Quarteroni-Valli, Springer 1997</span>
+0005 <span class="comment">%            with coefficients computed with formula (4.4.18)</span>
+0006 <span class="comment">%                   pag. 118, Quarteroni-Valli, Springer 1997</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  [u_int]=legendre_tr_eval(x,u,x_int) returns the evaluation at nodes x_int</span>
+0009 <span class="comment">%       of the expansion of (I_N u)(x) with respect to Legendre polynomials</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%       (I_n u)(x)=\Sum_{k=0}^n u_k L_k(x)             (*)</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%       where L_k(x) are the Legendre polynomials</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Input: x = array of np Legendre Gauss Lobatto (LGL) nodes on [-1,1]</span>
+0016 <span class="comment">%        u = array of np values of u at LGL nodes x : u_j=u(x_j)</span>
+0017 <span class="comment">%            size(u)=[np,nc], where nc is the number of transforms which</span>
+0018 <span class="comment">%            should be computed.</span>
+0019 <span class="comment">%        If u is a 2-indices array, then every column of u is transformed</span>
+0020 <span class="comment">%        following formula (*)</span>
+0021 <span class="comment">%        x_int = array of a second set of nodes in [-1,1]</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Output: u_int = array of the values of  the</span>
+0024 <span class="comment">%              expansion of I_Nu(x) with respect to Legendre polynomials.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Reference: A. Quarteroni, A. Valli:</span>
+0027 <span class="comment">%            &quot;Numerical Approximation of Partial Differential Equations&quot;</span>
+0028 <span class="comment">%            Springer Verlag / 1997 (2nd Ed)</span>
+0029 <span class="comment">%</span>
+0030 
+0031 <span class="comment">%   Written by Paola Gervasio</span>
+0032 <span class="comment">%   $Date: 2007/04/01$</span>
+0033 
+0034 
+0035 n1=length(x_int);
+0036 np=length(x); n=np-1;
+0037 
+0038 uk=<a href="legendre_tr_coef.html" class="code" title="function [uk]=legendre_tr_coef(x,u);">legendre_tr_coef</a>(x,u);
+0039 pn=<a href="pnleg_all.html" class="code" title="function [p] = pnleg_all(x,n)">pnleg_all</a>(x_int,n);
+0040 u_int=pn*uk;
+0041 
+0042 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

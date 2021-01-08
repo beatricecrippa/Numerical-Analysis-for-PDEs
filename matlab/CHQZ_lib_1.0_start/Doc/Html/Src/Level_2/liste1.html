@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of liste1</title>
+  <meta name="keywords" content="liste1">
+  <meta name="description" content="LISTE1 Assembles lists of internal, boundary, interface nodes (similar to liste)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_2</a> &gt; liste1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_2&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>liste1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>LISTE1 Assembles lists of internal, boundary, interface nodes (similar to liste)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [lbor,lint,lintint,lgamma]=liste1(ifro); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> LISTE1 Assembles lists of internal, boundary, interface nodes (similar to liste)
+
+ [lbor,lint,lintint,lgamma]=liste1(ifro);
+
+ It computes lists of internal, boundary, interface nodes.
+ All lists are referred to global ordering on Omega
+
+ Input : ifro = column array of length noe=nov(npdx*npdy,ne):
+            if (x_i,y_i) is internal to Omega then ifro(i)=0,
+            if (x_i,y_i) is on \partial\Omega then ifro(i)=1,
+
+ Output:
+ lbor: list of boundary nodes
+ lint: list of internal nodes</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Elliptic_2d/Schur/eig_schur_2d.html" class="code" title="function [param]=eig_schur_2d(xa,xb,ya,yb,gam,cb,nex,nx,ney,ny,gammax,gammay,param);">eig_schur_2d</a>	EIG_SCHUR_2D   Eigenvalues computation Schur complement matrix</li><li><a href="../../Src/Elliptic_2d/Schur/schur_loc.html" class="code" title="function [AGG,Amm,AGm,Lmm,LGG,Am,f]=schur_loc(ifro,nov,wx,dx,jacx,wy,dy,jacy,nvli,gam,f,ub,param);">schur_loc</a>	SCHUR_LOC Computes local matrices and lists for implementing the Schur method</li><li><a href="../../Src/Elliptic_2d/Schur/schur_matrix.html" class="code" title="function [Sigma,PNN]=schur_matrix(ifro,nov,wx,dx,jacx,wy,dy,jacy,nvli,gam,novg,lint,lgamma,D,Rgamma,param);">schur_matrix</a>	SCHUR_MATRIX Computes  Schur complement matrix Sigma and its preconditioner</li><li><a href="../../Src/Elliptic_2d/Schwarz/stiffq1H.html" class="code" title="function [Ac,Acb,wwc,lista_coarse,noec,novc,lintc,ldirc]=stiffq1H(nx,nex,ny,ney,xy,nov,ifro);">stiffq1H</a>	STIFFQ1H Construction of stiffness Q1 matrix on the coarse grid.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [lbor,lint,lintint,lgamma]=liste1(ifro);</a>
+0002 <span class="comment">% LISTE1 Assembles lists of internal, boundary, interface nodes (similar to liste)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% [lbor,lint,lintint,lgamma]=liste1(ifro);</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% It computes lists of internal, boundary, interface nodes.</span>
+0007 <span class="comment">% All lists are referred to global ordering on Omega</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Input : ifro = column array of length noe=nov(npdx*npdy,ne):</span>
+0010 <span class="comment">%            if (x_i,y_i) is internal to Omega then ifro(i)=0,</span>
+0011 <span class="comment">%            if (x_i,y_i) is on \partial\Omega then ifro(i)=1,</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Output:</span>
+0014 <span class="comment">% lbor: list of boundary nodes</span>
+0015 <span class="comment">% lint: list of internal nodes</span>
+0016 <span class="comment">%</span>
+0017 
+0018 <span class="comment">%   Written by Paola Gervasio</span>
+0019 <span class="comment">%   $Date: 2007/04/01$</span>
+0020 
+0021 noe=length(ifro);
+0022 
+0023 
+0024 lint=[];lbor=[];lgamma=[]; lintint=[];
+0025 <span class="keyword">for</span> i=1:noe
+0026 <span class="keyword">if</span>(ifro(i)==1)
+0027 lbor=[lbor;i];
+0028 <span class="keyword">else</span>
+0029 lint=[lint;i];
+0030 <span class="keyword">end</span>
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="keyword">for</span> i=1:length(lint)
+0034 <span class="keyword">if</span>(ifro(i)==-1)
+0035 lgamma=[lgamma;i];
+0036 <span class="keyword">else</span>
+0037 lintint=[lintint;i];
+0038 <span class="keyword">end</span>
+0039 <span class="keyword">end</span>
+0040 
+0041 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

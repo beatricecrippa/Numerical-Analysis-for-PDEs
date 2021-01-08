@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ell_1d</title>
+  <meta name="keywords" content="ell_1d">
+  <meta name="description" content="ELL_1D   Numerical solution of the 1D elliptic boundary value problem (4.3.17) pag. 208, CHQZ2">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Elliptic_1d</a> &gt; ell_1d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_1d&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>ell_1d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>ELL_1D   Numerical solution of the 1D elliptic boundary value problem (4.3.17) pag. 208, CHQZ2</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [xy,un]=ell_1d(xa,xb,nu,beta,gam,ff,cb,ub,ne,nx); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> ELL_1D   Numerical solution of the 1D elliptic boundary value problem (4.3.17) pag. 208, CHQZ2
+
+  -nu d^2 u/dx^2 +beta du/dx+ gam u=1  in (-1,1)
+
+   + Dirichlet or Neumann boundary conditions
+
+ by Galerkin Numerical Integration with LGL quadrature formulas.
+
+  [xy,un]=ell_1d(xa,xb,nu,beta,gam,ff,ub,ne,nx);
+
+ Input: xa, xb = extrema of computational domain Omega=(xa,xb)
+      nu   = viscosity (constant&gt;0)
+      beta = coefficient of first order term (constant)
+      gam = coefficient of zeroth order term (constant&gt;0)
+      cb = string containing boundary conditions, for example
+           cb='dn' imposes Dirichlet in xa and Neumann in xb,
+           possible b.c.: Dirichlet, Neumann
+      ub = 2 components array with Dirichlet, Neumann (pure derivative)
+           data in xa and in xb
+      ne = number of elements (equally spaced)
+      nx = polynomial degree in each element (the same in each element)
+
+ Output: xy = 1D mesh
+         un = numerical solution 
+
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>	DERLGL      Spectral (Legendre Gauss Lobatto) derivative matrix</li><li><a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>	XWLGL Computes nodes and weights of the Legendre-Gauss-Lobatto quadrature formula.</li><li><a href="../../Src/Level_1/cosnov_1d.html" class="code" title="function [nov]=cosnov_1d(npdx,ne,nov);">cosnov_1d</a>	COSNOV_1D : Constructs the 1D (local mesh ---> global mesh) map</li><li><a href="../../Src/Level_1/ell_1d_se.html" class="code" title="function [A]=ell_1d_se(npdx,ne,nov,nu,beta,gam,wx,dx,jacx);">ell_1d_se</a>	ELL_1D_SE Assembles 1D global SEM matrix associated to  -nu u''+beta u'+gam u</li><li><a href="../../Src/Level_1/mesh_1d.html" class="code" title="function[xx,jacx,xy,ww]=mesh_1d(xa,xb,ne,npdx,nov,x,wx)">mesh_1d</a>	MESH_1D   Generates uniform 1D Spectral elements mesh</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="call_ell_1d.html" class="code" title="">call_ell_1d</a>	CALL_ELL_1D Script to produce results of fig. 4.17, pag. 207, CHQZ2</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [xy,un]=ell_1d(xa,xb,nu,beta,gam,ff,cb,ub,ne,nx);</a>
+0002 <span class="comment">% ELL_1D   Numerical solution of the 1D elliptic boundary value problem (4.3.17) pag. 208, CHQZ2</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  -nu d^2 u/dx^2 +beta du/dx+ gam u=1  in (-1,1)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   + Dirichlet or Neumann boundary conditions</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% by Galerkin Numerical Integration with LGL quadrature formulas.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  [xy,un]=ell_1d(xa,xb,nu,beta,gam,ff,ub,ne,nx);</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Input: xa, xb = extrema of computational domain Omega=(xa,xb)</span>
+0013 <span class="comment">%      nu   = viscosity (constant&gt;0)</span>
+0014 <span class="comment">%      beta = coefficient of first order term (constant)</span>
+0015 <span class="comment">%      gam = coefficient of zeroth order term (constant&gt;0)</span>
+0016 <span class="comment">%      cb = string containing boundary conditions, for example</span>
+0017 <span class="comment">%           cb='dn' imposes Dirichlet in xa and Neumann in xb,</span>
+0018 <span class="comment">%           possible b.c.: Dirichlet, Neumann</span>
+0019 <span class="comment">%      ub = 2 components array with Dirichlet, Neumann (pure derivative)</span>
+0020 <span class="comment">%           data in xa and in xb</span>
+0021 <span class="comment">%      ne = number of elements (equally spaced)</span>
+0022 <span class="comment">%      nx = polynomial degree in each element (the same in each element)</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Output: xy = 1D mesh</span>
+0025 <span class="comment">%         un = numerical solution</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0029 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0030 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0031 
+0032 <span class="comment">%   Written by Paola Gervasio</span>
+0033 <span class="comment">%   $Date: 2007/04/01$</span>
+0034 
+0035 
+0036 <span class="comment">%</span>
+0037 npdx=nx+1; 
+0038 
+0039 [x,wx]=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdx); dx=<a href="../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>(x,npdx);
+0040 
+0041 <span class="comment">% nov</span>
+0042 ldnov=npdx; nov=zeros(ldnov,ne);
+0043 [nov]=<a href="../../Src/Level_1/cosnov_1d.html" class="code" title="function [nov]=cosnov_1d(npdx,ne,nov);">cosnov_1d</a>(npdx,ne,nov);
+0044 noe=nov(npdx,ne);
+0045 
+0046 <span class="comment">% Uniform decomposition of  Omega in ne elements</span>
+0047 
+0048 [xx,jacx,xy,ww]=<a href="../../Src/Level_1/mesh_1d.html" class="code" title="function[xx,jacx,xy,ww]=mesh_1d(xa,xb,ne,npdx,nov,x,wx)">mesh_1d</a>(xa,xb,ne,npdx,nov,x,wx);
+0049 
+0050 <span class="comment">% Variable coefficients evaluation</span>
+0051 
+0052 
+0053 <span class="comment">% Matrix assembling</span>
+0054 A=<a href="../../Src/Level_1/ell_1d_se.html" class="code" title="function [A]=ell_1d_se(npdx,ne,nov,nu,beta,gam,wx,dx,jacx);">ell_1d_se</a>(npdx,ne,nov,nu,beta,gam,wx,dx,jacx);
+0055 
+0056 <span class="comment">% Right hand side</span>
+0057 f=ff(xy).*ww;
+0058 
+0059 
+0060 <span class="comment">% Setting Dirichlet boundary conditions on the matrix</span>
+0061 
+0062 <span class="keyword">if</span> cb(1)==<span class="string">'d'</span>
+0063 f(1)=ub(1); i1=2;
+0064 <span class="keyword">elseif</span> cb(1)==<span class="string">'n'</span>
+0065 f(1)=f(1)-nu*ub(1);i1=1;
+0066 <span class="keyword">end</span>
+0067 <span class="keyword">if</span> cb(2)==<span class="string">'d'</span>;
+0068 f(noe)=ub(2);i2=noe-1;
+0069 <span class="keyword">elseif</span> cb(1)==<span class="string">'n'</span>
+0070 f(noe)=f(noe)+nu*ub(2);i2=noe;
+0071 <span class="keyword">end</span>
+0072 
+0073 <span class="comment">% Reduce the system to non-Dirichlet unknowns</span>
+0074 lint=(i1:i2);
+0075 <span class="keyword">if</span> cb==<span class="string">'dd'</span>
+0076 f(lint)=f(lint)-A(lint,1)*ub(1)-A(lint,noe)*ub(2);
+0077 <span class="keyword">elseif</span> cb==<span class="string">'dn'</span>
+0078 f(lint)=f(lint)-A(lint,1)*ub(1);
+0079 <span class="keyword">elseif</span> cb==<span class="string">'nd'</span>
+0080 f(lint)=f(lint)-A(lint,noe)*ub(2);
+0081 <span class="keyword">end</span>
+0082 
+0083 A=A(lint,lint);
+0084 f=f(lint);
+0085 noeint=i2-i1+1;
+0086 
+0087 <span class="comment">% MEG on the linear system</span>
+0088 
+0089 un=A\f;
+0090 
+0091 <span class="keyword">if</span> cb==<span class="string">'dd'</span>
+0092 un=[ub(1);un;ub(2)];
+0093 <span class="keyword">elseif</span> cb==<span class="string">'dn'</span>
+0094 un=[ub(1);un];
+0095 <span class="keyword">elseif</span> cb==<span class="string">'nd'</span>
+0096 un=[un;ub(2)];
+0097 <span class="keyword">end</span>
+0098 
+0099 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

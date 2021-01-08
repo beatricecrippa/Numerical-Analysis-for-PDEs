@@ -1,0 +1,334 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of eig_schwarz_2d</title>
+  <meta name="keywords" content="eig_schwarz_2d">
+  <meta name="description" content="EIG_SCHWARZ_2D   Eigenvalues computation for the matrix associated to 2D b.v.p. -Delta u + gam u = f + Dirichlet b.c.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="../index.html">Elliptic_2d</a> &gt; <a href="index.html">Schwarz</a> &gt; eig_schwarz_2d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_2d/Schwarz&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>eig_schwarz_2d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>EIG_SCHWARZ_2D   Eigenvalues computation for the matrix associated to 2D b.v.p. -Delta u + gam u = f + Dirichlet b.c.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [param]=eig_schwarz_2d(xa,xb,ya,yb,gam,cb,nex,nx,ney,ny,gammax,gammay,param); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> EIG_SCHWARZ_2D   Eigenvalues computation for the matrix associated to 2D b.v.p. -Delta u + gam u = f + Dirichlet b.c. 
+
+
+     -Delta u + gam u = f       x in Omega
+
+      + Dirichlet bc
+
+  SEM Numerical Integration with LGL quadrature formulas, with
+  additive Schwarz preconditioner with overlapped elements and
+  coarse mesh (Sect. 6.3.3, CHQZ3)
+
+  [param]=eig_schwarz_2d(xa,xb,ya,yb,gam,...
+          nex,nx,ney,ny,gammax,gammay,param);
+
+           Omega=(xa,xb) x (ya,yb)
+
+                side 3
+           V4 __________ V3
+             |          |
+             |          |
+     side 4  | Omega    |  side 2
+             |          |
+             |__________|
+           V1            V2
+                side 1
+
+
+       __________________________
+       |      |      |     |     |
+       |  3   |  6   |  9  | 12  |      Omega and spectral elements
+       |      |      |     |     |      ordering
+       __________________________
+       |      |      |     |     |
+       |  2   |  5   |  8  | 11  |
+       |      |      |     |     |
+       __________________________
+       |      |      |     |     |
+       |  1   |  4   |  7  | 10  |
+       |      |      |     |     |
+       __________________________
+
+
+ Input: xa= abscissa of either vertex V1 or vertex V4
+        xb= abscissa of either vertex V2 or vertex V3
+        ya= ordinate of either vertex V1 or vertex V2
+        yb= ordinate of either vertex V3 or vertex V4
+        gam   = coefficient of zeroth order term (constant&gt;=0)
+        cb= a string of four elements, each for any side of \partial\Omega. 
+           cb(i) refers to side number &quot;i&quot; of \partial\Omega
+           'd' character stands for Dirichlet boundary conditions on that side
+           'n' character stands for Neumann boundary conditions on that side
+        It works only if cb='dddd'
+        nex = number of elements (equally spaced) along x-direction
+        nx = polynomial degree in each element (the same in each element)
+               along x-direction
+        ney = number of elements (equally spaced) along y-direction
+        ny = polynomial degree in each element (the same in each element)
+               along y-direction%        gammax = column or row array of length nex-1. 
+               If the deomposition of Omega is not
+               uniform, gammax is the vector of position of interfaces between
+               spectral elements along x-direction. If gammax=[], uniform
+               decomposition is used.
+        gammay = column or row array of length ney-1. 
+               If the deomposition of Omega is not
+               uniform, gammay is the vector of position of interfaces between
+               spectral elements along y-direction. If gammay=[], uniform
+               decomposition is used.
+        param = array of parameters
+        param(1) =1 P=I
+                 =2 P=Additive Schwarz with overlap and coarse mesh
+        param(2) = number of added layers for extending spectral elements
+                   inside additive Schwarz preconditioner.
+                   If param(2)==1, the preconditioner is P^{m}_{as,H} 
+                                    (minimum overlap), pag. 377 CHQZ3)
+                   If param(2)==2, the preconditioner is P^{s}_{as,H} 
+                                    (small overlap), pag. 377 CHQZ3)
+                   param(2) is a positive integer less than min(nx,ny)
+        param(3)     : maximum number of iterations in eigs
+        param(4)     : tolerance for stopping test in eigs
+        param(5:20)  NOT USED or INTERNAL USE
+                   
+ Output: 
+         param(11,12)  extrema eigenvalues (max,min) of
+                  the preconditioned stiffness matrix
+         param(13)  iterative condition number (|lam_max|/|lam_min|) of
+                  the preconditioned stiffness matrix
+
+ References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.
+             CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Evolution to Complex Geometries 
+                     and Applications to Fluid DynamicsSpectral Methods&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2007.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="cosnovenew.html" class="code" title="function [nove,nvle]=cosnovenew(nx,nex,ny,ney,nov,ifro,nlevel);">cosnovenew</a>	COSNOVENEW   Construction of restriction maps for extended elements</li><li><a href="matr0t.html" class="code" title="function r0t=matr0t(nx,ny,xy,nov, novc,noec,lista_coarse);">matr0t</a>	MATR0T Constructs matrix R_H^T used in (6.3.21), pag. 373 CHQZ3</li><li><a href="partition_e.html" class="code" title="function [p_unity]=partition_e(nove,nvle,noe)">partition_e</a>	PARTITION_E   Unity partition for the extended mesh</li><li><a href="precoasc.html" class="code" title="function [z]=precoasc(r,param,noei,lint,p_unity,xy, ww, nov, x,wx,y,wy,xx,jacx,yy,jacy,Aq1, wwq1, linte, nove, nvle,Ac, Acb, wwc, r0t,lista_coarse,noec,novc,lintc,ldirc);">precoasc</a>	PRECOASC Solves the linear system P_as z= r where P_as is the additive Schwarz prec.</li><li><a href="stiffq1.html" class="code" title="function [Aq1,Abq1,wwq1,linte,ldire,nove]=stiffq1(ifro,nov,xy,nove,nvle);">stiffq1</a>	STIFFQ1 Constructs local stiffness Q1 matrices on extended elements for Schwarz</li><li><a href="stiffq1H.html" class="code" title="function [Ac,Acb,wwc,lista_coarse,noec,novc,lintc,ldirc]=stiffq1H(nx,nex,ny,ney,xy,nov,ifro);">stiffq1H</a>	STIFFQ1H Construction of stiffness Q1 matrix on the coarse grid.</li><li><a href="../../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>	DERLGL      Spectral (Legendre Gauss Lobatto) derivative matrix</li><li><a href="../../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>	XWLGL Computes nodes and weights of the Legendre-Gauss-Lobatto quadrature formula.</li><li><a href="../../../Src/Level_2/cosnov_2d.html" class="code" title="function [nov]=cosnov_2d(npdx,nex,npdy,ney);">cosnov_2d</a>	COSNOV_2D : Constructs the 2D (local mesh ---> global mesh) map</li><li><a href="../../../Src/Level_2/liste.html" class="code" title="function [lbor,lint,lintint,lgamma,ifro]=liste(ifro,nov);">liste</a>	LISTE Assembles lists of internal, boundary, interface nodes.</li><li><a href="../../../Src/Level_2/mesh_2d.html" class="code" title="function[xx,yy,jacx,jacy,xy,ww,ifro]=mesh2d(xa,xb,ya,yb,cb,nex,ney,npdx,npdy,nov,x,wx,y,wy,gammax,gammay)">mesh_2d</a>	MESH2D   Uniform 2D SEM mesh on rectangular domain Omega=(xa,xb) x (ya,yb)</li><li><a href="../../../Src/Level_2/stiff_2d_se.html" class="code" title="function [A]=stiff_2d_se(npdx,nex,npdy,ney,nov,wx,dx,jacx,wy,dy,jacy);">stiff_2d_se</a>	STIFF_2D_SE Assembles 2D global SEM matrix associated to (nabla(phi_j), nabla(phi_i))_N</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="call_eig_schwarz_2d.html" class="code" title="">call_eig_schwarz_2d</a>	CALL_EIG_SCHWARZ_2D  Script file for pre and post processing eig_schwarz_2d.m</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [param]=eig_schwarz_2d(xa,xb,ya,yb,gam,</a><span class="keyword">...</span>
+0002           cb,nex,nx,ney,ny,gammax,gammay,param);
+0003 <span class="comment">% EIG_SCHWARZ_2D   Eigenvalues computation for the matrix associated to 2D b.v.p. -Delta u + gam u = f + Dirichlet b.c.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%     -Delta u + gam u = f       x in Omega</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%      + Dirichlet bc</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  SEM Numerical Integration with LGL quadrature formulas, with</span>
+0011 <span class="comment">%  additive Schwarz preconditioner with overlapped elements and</span>
+0012 <span class="comment">%  coarse mesh (Sect. 6.3.3, CHQZ3)</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%  [param]=eig_schwarz_2d(xa,xb,ya,yb,gam,...</span>
+0015 <span class="comment">%          nex,nx,ney,ny,gammax,gammay,param);</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%           Omega=(xa,xb) x (ya,yb)</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%                side 3</span>
+0020 <span class="comment">%           V4 __________ V3</span>
+0021 <span class="comment">%             |          |</span>
+0022 <span class="comment">%             |          |</span>
+0023 <span class="comment">%     side 4  | Omega    |  side 2</span>
+0024 <span class="comment">%             |          |</span>
+0025 <span class="comment">%             |__________|</span>
+0026 <span class="comment">%           V1            V2</span>
+0027 <span class="comment">%                side 1</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%       __________________________</span>
+0031 <span class="comment">%       |      |      |     |     |</span>
+0032 <span class="comment">%       |  3   |  6   |  9  | 12  |      Omega and spectral elements</span>
+0033 <span class="comment">%       |      |      |     |     |      ordering</span>
+0034 <span class="comment">%       __________________________</span>
+0035 <span class="comment">%       |      |      |     |     |</span>
+0036 <span class="comment">%       |  2   |  5   |  8  | 11  |</span>
+0037 <span class="comment">%       |      |      |     |     |</span>
+0038 <span class="comment">%       __________________________</span>
+0039 <span class="comment">%       |      |      |     |     |</span>
+0040 <span class="comment">%       |  1   |  4   |  7  | 10  |</span>
+0041 <span class="comment">%       |      |      |     |     |</span>
+0042 <span class="comment">%       __________________________</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% Input: xa= abscissa of either vertex V1 or vertex V4</span>
+0046 <span class="comment">%        xb= abscissa of either vertex V2 or vertex V3</span>
+0047 <span class="comment">%        ya= ordinate of either vertex V1 or vertex V2</span>
+0048 <span class="comment">%        yb= ordinate of either vertex V3 or vertex V4</span>
+0049 <span class="comment">%        gam   = coefficient of zeroth order term (constant&gt;=0)</span>
+0050 <span class="comment">%        cb= a string of four elements, each for any side of \partial\Omega.</span>
+0051 <span class="comment">%           cb(i) refers to side number &quot;i&quot; of \partial\Omega</span>
+0052 <span class="comment">%           'd' character stands for Dirichlet boundary conditions on that side</span>
+0053 <span class="comment">%           'n' character stands for Neumann boundary conditions on that side</span>
+0054 <span class="comment">%        It works only if cb='dddd'</span>
+0055 <span class="comment">%        nex = number of elements (equally spaced) along x-direction</span>
+0056 <span class="comment">%        nx = polynomial degree in each element (the same in each element)</span>
+0057 <span class="comment">%               along x-direction</span>
+0058 <span class="comment">%        ney = number of elements (equally spaced) along y-direction</span>
+0059 <span class="comment">%        ny = polynomial degree in each element (the same in each element)</span>
+0060 <span class="comment">%               along y-direction%        gammax = column or row array of length nex-1.</span>
+0061 <span class="comment">%               If the deomposition of Omega is not</span>
+0062 <span class="comment">%               uniform, gammax is the vector of position of interfaces between</span>
+0063 <span class="comment">%               spectral elements along x-direction. If gammax=[], uniform</span>
+0064 <span class="comment">%               decomposition is used.</span>
+0065 <span class="comment">%        gammay = column or row array of length ney-1.</span>
+0066 <span class="comment">%               If the deomposition of Omega is not</span>
+0067 <span class="comment">%               uniform, gammay is the vector of position of interfaces between</span>
+0068 <span class="comment">%               spectral elements along y-direction. If gammay=[], uniform</span>
+0069 <span class="comment">%               decomposition is used.</span>
+0070 <span class="comment">%        param = array of parameters</span>
+0071 <span class="comment">%        param(1) =1 P=I</span>
+0072 <span class="comment">%                 =2 P=Additive Schwarz with overlap and coarse mesh</span>
+0073 <span class="comment">%        param(2) = number of added layers for extending spectral elements</span>
+0074 <span class="comment">%                   inside additive Schwarz preconditioner.</span>
+0075 <span class="comment">%                   If param(2)==1, the preconditioner is P^{m}_{as,H}</span>
+0076 <span class="comment">%                                    (minimum overlap), pag. 377 CHQZ3)</span>
+0077 <span class="comment">%                   If param(2)==2, the preconditioner is P^{s}_{as,H}</span>
+0078 <span class="comment">%                                    (small overlap), pag. 377 CHQZ3)</span>
+0079 <span class="comment">%                   param(2) is a positive integer less than min(nx,ny)</span>
+0080 <span class="comment">%        param(3)     : maximum number of iterations in eigs</span>
+0081 <span class="comment">%        param(4)     : tolerance for stopping test in eigs</span>
+0082 <span class="comment">%        param(5:20)  NOT USED or INTERNAL USE</span>
+0083 <span class="comment">%</span>
+0084 <span class="comment">% Output:</span>
+0085 <span class="comment">%         param(11,12)  extrema eigenvalues (max,min) of</span>
+0086 <span class="comment">%                  the preconditioned stiffness matrix</span>
+0087 <span class="comment">%         param(13)  iterative condition number (|lam_max|/|lam_min|) of</span>
+0088 <span class="comment">%                  the preconditioned stiffness matrix</span>
+0089 <span class="comment">%</span>
+0090 <span class="comment">% References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0091 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0092 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0093 <span class="comment">%             CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0094 <span class="comment">%                    &quot;Spectral Methods. Evolution to Complex Geometries</span>
+0095 <span class="comment">%                     and Applications to Fluid DynamicsSpectral Methods&quot;</span>
+0096 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2007.</span>
+0097 
+0098 <span class="comment">%   Written by Paola Gervasio</span>
+0099 <span class="comment">%   $Date: 2007/04/01$</span>
+0100 
+0101 xy=[]; un=[];  
+0102 
+0103 npdx=nx+1; npdy=ny+1; ldnov=npdx*npdy; mn=ldnov; ne=nex*ney;
+0104 
+0105 [x,wx]=<a href="../../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdx); [dx]=<a href="../../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>(x,npdx);
+0106 [y,wy]=<a href="../../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdy); [dy]=<a href="../../../Src/Level_0/derlgl.html" class="code" title="function [d] = derlgl(x,np)">derlgl</a>(y,npdy);
+0107 
+0108 <span class="comment">% Generation of nov: its implements the</span>
+0109 <span class="comment">%         restriction map R_m from \overline\Omega  to overline\Omega_m</span>
+0110 <span class="comment">%         (CHQZ, pag. 394)</span>
+0111 
+0112 [nov]=<a href="../../../Src/Level_2/cosnov_2d.html" class="code" title="function [nov]=cosnov_2d(npdx,nex,npdy,ney);">cosnov_2d</a>(npdx,nex,npdy,ney);
+0113 noe=nov(ldnov,ne);
+0114 
+0115 <span class="comment">% Mesh generation</span>
+0116 
+0117 [xx,yy,jacx,jacy,xy,ww,ifro]=<a href="../../../Src/Level_2/mesh_2d.html" class="code" title="function[xx,yy,jacx,jacy,xy,ww,ifro]=mesh2d(xa,xb,ya,yb,cb,nex,ney,npdx,npdy,nov,x,wx,y,wy,gammax,gammay)">mesh_2d</a>(xa,xb,ya,yb,cb,nex,ney,npdx,npdy,<span class="keyword">...</span>
+0118 nov,x,wx,y,wy,gammax,gammay);
+0119 
+0120 
+0121 <span class="comment">% Generation of lists of internal, boundary, interface nodes. All lists are referred to</span>
+0122 <span class="comment">% global ordering on Omega</span>
+0123 <span class="comment">%</span>
+0124 <span class="comment">% ldir: list of Dirichlet boundary nodes</span>
+0125 <span class="comment">% lint: list of internal nodes</span>
+0126 <span class="comment">% lintint: list of internal nodes which are internal to spectral elements</span>
+0127 <span class="comment">% lgamma: list of internal nodes which are on the interfaces between spectral elements</span>
+0128 
+0129 [ldir,lint,lintint,lgamma,ifro]=<a href="../../../Src/Level_2/liste.html" class="code" title="function [lbor,lint,lintint,lgamma,ifro]=liste(ifro,nov);">liste</a>(ifro,nov);
+0130 
+0131 <span class="comment">% Matrix assembling</span>
+0132 
+0133 A=<a href="../../../Src/Level_2/stiff_2d_se.html" class="code" title="function [A]=stiff_2d_se(npdx,nex,npdy,ney,nov,wx,dx,jacx,wy,dy,jacy);">stiff_2d_se</a>(npdx,nex,npdy,ney,nov,wx,dx,jacx,wy,dy,jacy);
+0134 M=spdiags(ww,0,noe,noe);
+0135 
+0136 <span class="keyword">if</span> gam ~=0
+0137     A=A+gam*M;
+0138 <span class="keyword">end</span>
+0139 
+0140 
+0141 <span class="comment">%</span>
+0142 
+0143 A=A(lint,lint);
+0144 noei=length(lint);
+0145 wwi=ww(lint);
+0146 
+0147 <span class="comment">% extended elements construction</span>
+0148 
+0149 [nove,nvle]=<a href="cosnovenew.html" class="code" title="function [nove,nvle]=cosnovenew(nx,nex,ny,ney,nov,ifro,nlevel);">cosnovenew</a>(nx,nex,ny,ney,nov,ifro,param(2));
+0150 
+0151 <span class="comment">% Construction of local stiffness Q1 matrices on extended elements</span>
+0152 
+0153 [Aq1,Abq1,wwq1,linte,ldire,nove]=<a href="stiffq1.html" class="code" title="function [Aq1,Abq1,wwq1,linte,ldire,nove]=stiffq1(ifro,nov,xy,nove,nvle);">stiffq1</a>(ifro,nov,xy,nove,nvle);
+0154 
+0155 <span class="comment">% Construction of stiffness Q1 matrix on the coarse grid.</span>
+0156 
+0157 [Ac,Acb,wwc,lista_coarse,noec,novc,lintc,ldirc]=<a href="stiffq1H.html" class="code" title="function [Ac,Acb,wwc,lista_coarse,noec,novc,lintc,ldirc]=stiffq1H(nx,nex,ny,ney,xy,nov,ifro);">stiffq1H</a>(nx,nex,ny,ney,xy,nov,ifro);
+0158 r0t=<a href="matr0t.html" class="code" title="function r0t=matr0t(nx,ny,xy,nov, novc,noec,lista_coarse);">matr0t</a>(nx,ny,xy,nov,novc,noec,lista_coarse);
+0159 
+0160 <span class="comment">% Unity partition</span>
+0161 
+0162 nvl=[mn*ones(ne,1),npdx*ones(ne,1),npdy*ones(ne,1)];
+0163 [p_unity]=<a href="partition_e.html" class="code" title="function [p_unity]=partition_e(nove,nvle,noe)">partition_e</a>(nov,nvl,noe);
+0164 param(13:16)=[nx,ny,nex,ney];
+0165 
+0166 <span class="comment">% Matrix construction</span>
+0167 
+0168 Pas=zeros(noei,noei);
+0169 <span class="keyword">for</span> i=1:noei
+0170     r=A(:,i);
+0171     [z]=<a href="precoasc.html" class="code" title="function [z]=precoasc(r,param,noei,lint,p_unity,xy, ww, nov, x,wx,y,wy,xx,jacx,yy,jacy,Aq1, wwq1, linte, nove, nvle,Ac, Acb, wwc, r0t,lista_coarse,noec,novc,lintc,ldirc);">precoasc</a>(r,param,noei,lint,p_unity,<span class="keyword">...</span>
+0172     xy, ww, nov, x,wx,y,wy,xx,jacx,yy,jacy,<span class="keyword">...</span>
+0173     Aq1, wwq1, linte, nove, nvle,<span class="keyword">...</span>
+0174     Ac, Acb, wwc, r0t,lista_coarse,noec,novc,lintc,ldirc);
+0175 Pas(:,i)=z;
+0176 <span class="keyword">end</span>
+0177 
+0178 <span class="comment">% Eigenvalues computation</span>
+0179 
+0180 <span class="keyword">if</span> param(4)==0
+0181 param(4)=1000;
+0182 <span class="keyword">end</span>
+0183 <span class="keyword">if</span> param(5)==0
+0184 param(5)=1.d-12;
+0185 <span class="keyword">end</span>
+0186 opts.issym=1;opts.disp=0;
+0187 opts.maxit=param(4); opts.tol=param(5);
+0188 lambda_max=eigs(Pas,1,<span class="string">'lm'</span>,opts);
+0189 lambda_min=eigs(Pas,1,<span class="string">'sm'</span>,opts);
+0190 param(11)=lambda_max;
+0191 param(12)=lambda_min;
+0192 param(13)=lambda_max/lambda_min;
+0193 
+0194 
+0195 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

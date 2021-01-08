@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cosnov_2d</title>
+  <meta name="keywords" content="cosnov_2d">
+  <meta name="description" content="COSNOV_2D : Constructs the 2D (local mesh ---> global mesh) map">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_2</a> &gt; cosnov_2d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_2&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>cosnov_2d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>COSNOV_2D : Constructs the 2D (local mesh ---> global mesh) map</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [nov]=cosnov_2d(npdx,nex,npdy,ney); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> COSNOV_2D : Constructs the 2D (local mesh ---&gt; global mesh) map
+
+ [nov]=cosnov_2d(npdx,nex,npdy,ney) computes the 2-index array nov:
+       nov(i,ie) = is the index, with respect to global ordering,
+                   associated to node i of element ie.
+
+       __________________________
+       |      |      |     |     |
+       |  3   |  6   |  9  | 12  |      Omega and spectral elements 
+       |      |      |     |     |      ordering
+       __________________________
+       |      |      |     |     |
+       |  2   |  5   |  8  | 11  |    
+       |      |      |     |     |
+       __________________________
+       |      |      |     |     |
+       |  1   |  4   |  7  | 10  |
+       |      |      |     |     |
+       __________________________
+
+
+ Input: npdx = number of nodes along x-direction inside 
+               one element (the same in every element)
+        nex  = number of elements along x-direction
+        npdy = number of nodes along y-direction inside
+               one element (the same in every element)
+        ney  = number of elements along y-direction
+
+ Output: nov = 2-index array of local to global map, 
+               size(nov)=[max(npdx*npdy),ne]
+
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Elliptic_2d/Schur/eig_schur_2d.html" class="code" title="function [param]=eig_schur_2d(xa,xb,ya,yb,gam,cb,nex,nx,ney,ny,gammax,gammay,param);">eig_schur_2d</a>	EIG_SCHUR_2D   Eigenvalues computation Schur complement matrix</li><li><a href="../../Src/Elliptic_2d/Schur/schur_2d.html" class="code" title="function [xy,un,param]=schur_2d(xa,xb,ya,yb,gam,uex,uex_x,uex_y,ff,g,h,cb,nex,nx,ney,ny,gammax,gammay,param);">schur_2d</a>	SCHUR_2D   Numerical solution of the 2D b.v.p. -Delta u + gam u -Schur complement</li><li><a href="../../Src/Elliptic_2d/Schwarz/eig_schwarz_2d.html" class="code" title="function [param]=eig_schwarz_2d(xa,xb,ya,yb,gam,cb,nex,nx,ney,ny,gammax,gammay,param);">eig_schwarz_2d</a>	EIG_SCHWARZ_2D   Eigenvalues computation for the matrix associated to 2D b.v.p. -Delta u + gam u = f + Dirichlet b.c.</li><li><a href="../../Src/Elliptic_2d/Schwarz/schwarz_2d.html" class="code" title="function [xy,un,param]=schwarz_2d(xa,xb,ya,yb,gam,uex,uex_x,uex_y,ff,g,h,cb,nex,nx,ney,ny,gammax,gammay,param);">schwarz_2d</a>	SCHWARZ_2D   Numerical solution of the 2D boundary value problem</li><li><a href="../../Src/Elliptic_2d/lap_2d.html" class="code" title="function [xy,un,D,param]=lap_2d(xa,xb,ya,yb,gam,uex,uex_x,uex_y,ff,g,h,cb,nex,nx,ney,ny,gammax,gammay,param);">lap_2d</a>	LAP_2D   Numerical solution of the 2D b.v.p. -Delta u + gam u = f</li><li><a href="../../Src/Elliptic_2d/plot_mesh.html" class="code" title="">plot_mesh</a>	PLOT_MESH Script for plotting SEM mesh  on a rectangle</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [nov]=cosnov_2d(npdx,nex,npdy,ney);</a>
+0002 <span class="comment">% COSNOV_2D : Constructs the 2D (local mesh ---&gt; global mesh) map</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% [nov]=cosnov_2d(npdx,nex,npdy,ney) computes the 2-index array nov:</span>
+0005 <span class="comment">%       nov(i,ie) = is the index, with respect to global ordering,</span>
+0006 <span class="comment">%                   associated to node i of element ie.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%       __________________________</span>
+0009 <span class="comment">%       |      |      |     |     |</span>
+0010 <span class="comment">%       |  3   |  6   |  9  | 12  |      Omega and spectral elements</span>
+0011 <span class="comment">%       |      |      |     |     |      ordering</span>
+0012 <span class="comment">%       __________________________</span>
+0013 <span class="comment">%       |      |      |     |     |</span>
+0014 <span class="comment">%       |  2   |  5   |  8  | 11  |</span>
+0015 <span class="comment">%       |      |      |     |     |</span>
+0016 <span class="comment">%       __________________________</span>
+0017 <span class="comment">%       |      |      |     |     |</span>
+0018 <span class="comment">%       |  1   |  4   |  7  | 10  |</span>
+0019 <span class="comment">%       |      |      |     |     |</span>
+0020 <span class="comment">%       __________________________</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Input: npdx = number of nodes along x-direction inside</span>
+0024 <span class="comment">%               one element (the same in every element)</span>
+0025 <span class="comment">%        nex  = number of elements along x-direction</span>
+0026 <span class="comment">%        npdy = number of nodes along y-direction inside</span>
+0027 <span class="comment">%               one element (the same in every element)</span>
+0028 <span class="comment">%        ney  = number of elements along y-direction</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% Output: nov = 2-index array of local to global map,</span>
+0031 <span class="comment">%               size(nov)=[max(npdx*npdy),ne]</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0035 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0036 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0037 
+0038 <span class="comment">%   Written by Paola Gervasio</span>
+0039 <span class="comment">%   $Date: 2007/04/01$</span>
+0040 
+0041 ldnov=npdx*npdy;
+0042 ne=nex*ney;
+0043 nov=zeros(ldnov,ne);
+0044 
+0045 <span class="comment">% element 1</span>
+0046 
+0047 nov(:,1)=(1:ldnov)';
+0048 
+0049 <span class="comment">% elements first column</span>
+0050 
+0051 k=ldnov-npdx;
+0052 <span class="keyword">for</span> ie=2:ney
+0053 nov(:,ie)=(k+1:k+ldnov)';
+0054 k=k+ldnov-npdx;
+0055 <span class="keyword">end</span>
+0056 kmax=k+npdx;
+0057 
+0058 <span class="comment">% other columns</span>
+0059 
+0060 nxm1=npdx-1;
+0061 <span class="keyword">for</span> iex=2:nex
+0062 
+0063 <span class="comment">%  other rows, bottom elements</span>
+0064 
+0065 ie=(iex-1)*ney+1;
+0066 <span class="keyword">for</span> j=1:npdy
+0067 k=(j-1)*npdx;
+0068 nov(k+1,ie)=nov(j*npdx,ie-ney);
+0069 nov(k+2:k+npdx,ie)=(kmax+1:kmax+nxm1)';
+0070 kmax=kmax+nxm1;
+0071 <span class="keyword">end</span>
+0072 
+0073 <span class="comment">% other elements</span>
+0074 
+0075 <span class="keyword">for</span> iey=2:ney
+0076 ie=(iex-1)*ney+iey;
+0077 
+0078 <span class="comment">% first row</span>
+0079 nov(1:npdx,ie)=nov(ldnov-npdx+1:ldnov,ie-1);
+0080 <span class="keyword">for</span> j=2:npdy
+0081 k=(j-1)*npdx;
+0082 nov(k+1,ie)=nov(j*npdx,ie-ney);
+0083 nov(k+2:k+npdx,ie)=(kmax+1:kmax+nxm1)';
+0084 kmax=kmax+nxm1;
+0085 <span class="keyword">end</span>
+0086 
+0087 <span class="keyword">end</span>
+0088 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

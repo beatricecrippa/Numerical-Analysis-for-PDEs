@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cosnovenew</title>
+  <meta name="keywords" content="cosnovenew">
+  <meta name="description" content="COSNOVENEW   Construction of restriction maps for extended elements">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="../index.html">Elliptic_2d</a> &gt; <a href="index.html">Schwarz</a> &gt; cosnovenew.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_2d/Schwarz&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>cosnovenew
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>COSNOVENEW   Construction of restriction maps for extended elements</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [nove,nvle]=cosnovenew(nx,nex,ny,ney,nov,ifro,nlevel); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">  COSNOVENEW   Construction of restriction maps for extended elements 
+
+      [nove,nvle]=cosnovenew(npdx,nex,npdy,ney,nov,ifro,nlevel);
+
+ Input: nx = polynomial degree in each spectral element along x-direction
+        nex = number of spectral elements along x-direction
+        ny = polynomial degree in each spectral element along y-direction
+        ney = number of spectral elements along y-direction
+        nov = 2-index array of local to global map, 
+               size(nov)=[max(npdx*npdy),ne]
+        ifro = column array of length noe=nov(npdx*npdy,ne): 
+            if (x_i,y_i) is internal to Omega then ifro(i)=0,
+            if (x_i,y_i) is on \partial\Omega then ifro(i)=1,
+        nlevel = number of added layers for extending spectral elements
+                   inside additive Schwarz preconditioner.
+                   If param(2)==1, the preconditioner is P^{m}_{as,H} 
+                                    (minimum overlap), pag. 377 CHQZ3)
+                   If param(2)==2, the preconditioner is P^{s}_{as,H} 
+                                    (small overlap), pag. 377 CHQZ3)
+                   param(2) is a positive integer less than min(nx,ny)
+
+ Output: nove = 2-index array of &quot;extended local&quot; to global map, 
+         nvle = 2-index array:
+                 nvle (:,1)=number of nodes of the extendend elements
+                 nvle (:,2)=number of Q1 elements of the extendend elements
+                            along x-direction
+                 nvle (:,3)=number of Q1 elements of the extendend elements
+                            along y-direction
+
+
+ References: CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Evolution to Complex Geometries 
+                     and Applications to Fluid DynamicsSpectral Methods&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2007.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="eig_schwarz_2d.html" class="code" title="function [param]=eig_schwarz_2d(xa,xb,ya,yb,gam,cb,nex,nx,ney,ny,gammax,gammay,param);">eig_schwarz_2d</a>	EIG_SCHWARZ_2D   Eigenvalues computation for the matrix associated to 2D b.v.p. -Delta u + gam u = f + Dirichlet b.c.</li><li><a href="schwarz_2d.html" class="code" title="function [xy,un,param]=schwarz_2d(xa,xb,ya,yb,gam,uex,uex_x,uex_y,ff,g,h,cb,nex,nx,ney,ny,gammax,gammay,param);">schwarz_2d</a>	SCHWARZ_2D   Numerical solution of the 2D boundary value problem</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [nove,nvle]=cosnovenew(nx,nex,ny,ney,nov,ifro,nlevel);</a>
+0002 <span class="comment">%  COSNOVENEW   Construction of restriction maps for extended elements</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%      [nove,nvle]=cosnovenew(npdx,nex,npdy,ney,nov,ifro,nlevel);</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input: nx = polynomial degree in each spectral element along x-direction</span>
+0007 <span class="comment">%        nex = number of spectral elements along x-direction</span>
+0008 <span class="comment">%        ny = polynomial degree in each spectral element along y-direction</span>
+0009 <span class="comment">%        ney = number of spectral elements along y-direction</span>
+0010 <span class="comment">%        nov = 2-index array of local to global map,</span>
+0011 <span class="comment">%               size(nov)=[max(npdx*npdy),ne]</span>
+0012 <span class="comment">%        ifro = column array of length noe=nov(npdx*npdy,ne):</span>
+0013 <span class="comment">%            if (x_i,y_i) is internal to Omega then ifro(i)=0,</span>
+0014 <span class="comment">%            if (x_i,y_i) is on \partial\Omega then ifro(i)=1,</span>
+0015 <span class="comment">%        nlevel = number of added layers for extending spectral elements</span>
+0016 <span class="comment">%                   inside additive Schwarz preconditioner.</span>
+0017 <span class="comment">%                   If param(2)==1, the preconditioner is P^{m}_{as,H}</span>
+0018 <span class="comment">%                                    (minimum overlap), pag. 377 CHQZ3)</span>
+0019 <span class="comment">%                   If param(2)==2, the preconditioner is P^{s}_{as,H}</span>
+0020 <span class="comment">%                                    (small overlap), pag. 377 CHQZ3)</span>
+0021 <span class="comment">%                   param(2) is a positive integer less than min(nx,ny)</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Output: nove = 2-index array of &quot;extended local&quot; to global map,</span>
+0024 <span class="comment">%         nvle = 2-index array:</span>
+0025 <span class="comment">%                 nvle (:,1)=number of nodes of the extendend elements</span>
+0026 <span class="comment">%                 nvle (:,2)=number of Q1 elements of the extendend elements</span>
+0027 <span class="comment">%                            along x-direction</span>
+0028 <span class="comment">%                 nvle (:,3)=number of Q1 elements of the extendend elements</span>
+0029 <span class="comment">%                            along y-direction</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% References: CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0033 <span class="comment">%                    &quot;Spectral Methods. Evolution to Complex Geometries</span>
+0034 <span class="comment">%                     and Applications to Fluid DynamicsSpectral Methods&quot;</span>
+0035 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2007.</span>
+0036 
+0037 <span class="comment">%   Written by Paola Gervasio</span>
+0038 <span class="comment">%   $Date: 2007/04/01$</span>
+0039 
+0040 [ldnov,ne]=size(nov);
+0041 
+0042 npdx=nx+1; npdy=ny+1;mn=npdx*npdy;
+0043 nm1=mn-nx;
+0044 mne=(npdx+nlevel*2)*(npdy+nlevel*2);
+0045 nove=zeros(mne,ne);
+0046 nvle=zeros(ne,3);
+0047 <span class="keyword">for</span> ie=1:ne
+0048 nove(1:mn,ie)=nov(1:mn,ie);
+0049 nvle(ie,2)=nx; nvle(ie,3)=ny;
+0050 ultimo=mn;
+0051 vertex=zeros(4,1);
+0052 
+0053 <span class="comment">% vertex 1</span>
+0054 
+0055 ig=nov(1,ie);
+0056 <span class="keyword">if</span>(ifro(ig)&lt;=0)
+0057 vertex(1)=1;
+0058 <span class="comment">% The vertex is inside Omega, I expand nov</span>
+0059 <span class="comment">% by adding the last  &quot;nlevel&quot; rows of the domain down</span>
+0060 <span class="keyword">for</span> ib=1:nlevel
+0061     nove(ultimo+1:ultimo+npdx,ie)=nov(npdx*(ny-ib)+1:npdx*(ny-ib+1),ie-1);
+0062 ultimo=ultimo+npdx; nvle(ie,3)=nvle(ie,3)+1;
+0063 <span class="keyword">end</span>
+0064 
+0065 <span class="comment">% by adding the last  &quot;nlevel&quot; columns of the left domain</span>
+0066 <span class="keyword">for</span> ib=1:nlevel
+0067 nove(ultimo+1:ultimo+npdy,ie)=nov(nx-ib+1:npdx:mn-ib,ie-ney);
+0068 ultimo=ultimo+npdy; nvle(ie,2)=nvle(ie,2)+1;
+0069 <span class="keyword">end</span>
+0070 <span class="comment">% by adding nodes of the element symmetric to &quot;ie&quot; with respect to the vertex</span>
+0071 <span class="keyword">for</span> ib=1:nlevel
+0072     nove(ultimo+1:ultimo+nlevel,ie)=nov(mn-npdx*ib-nlevel:mn-npdx*ib-1,ie-ney-1);
+0073 ultimo=ultimo+nlevel;
+0074 <span class="keyword">end</span>
+0075 <span class="keyword">end</span>
+0076 
+0077 <span class="comment">% vertex 2</span>
+0078 
+0079 ig=nov(npdx,ie);
+0080 <span class="keyword">if</span>(ifro(ig)&lt;=0)
+0081 vertex(2)=1;
+0082 <span class="comment">% The vertex is inside Omega, I expand nov</span>
+0083 <span class="keyword">if</span> vertex(1)==0
+0084 <span class="comment">% by adding the last  &quot;nlevel&quot; rows of the  domain down</span>
+0085 <span class="keyword">for</span> ib=1:nlevel
+0086     nove(ultimo+1:ultimo+npdx,ie)=nov(npdx*(ny-ib)+1:npdx*(ny-ib+1),ie-1);
+0087 ultimo=ultimo+npdx;nvle(ie,3)=nvle(ie,3)+1;
+0088 <span class="keyword">end</span>
+0089 <span class="keyword">end</span>
+0090 <span class="comment">% by adding the first  &quot;nlevel&quot; columns of the right domain</span>
+0091 <span class="keyword">for</span> ib=1:nlevel
+0092 nove(ultimo+1:ultimo+npdy,ie)=nov(ib+1:npdx:nm1+ib,ie+ney);
+0093 ultimo=ultimo+npdy; nvle(ie,2)=nvle(ie,2)+1;
+0094 <span class="keyword">end</span>
+0095 <span class="comment">% by adding nodes of the element symmetric to &quot;ie&quot; with respect to the vertex</span>
+0096  <span class="keyword">for</span> ib=1:nlevel
+0097      nove(ultimo+1:ultimo+nlevel,ie)=nov(mn-npdx*(ib+1)+2:mn-npdx*(ib+1)+1+nlevel,ie+ney-1);
+0098  ultimo=ultimo+nlevel;
+0099 <span class="keyword">end</span>
+0100 <span class="keyword">end</span>
+0101 
+0102 <span class="comment">% vertex 3</span>
+0103 
+0104 ig=nov(mn,ie);
+0105 <span class="keyword">if</span>(ifro(ig)&lt;=0)
+0106 vertex(3)=1;
+0107 <span class="comment">% The vertex is inside Omega, I expand nov</span>
+0108 <span class="keyword">if</span> vertex(2)==0
+0109 <span class="comment">% by adding the first  &quot;nlevel&quot; columns of the right domain</span>
+0110 <span class="keyword">for</span> ib=1:nlevel
+0111     nove(ultimo+1:ultimo+npdy,ie)=nov(ib+1:npdx:nm1+ib,ie+ney);
+0112 ultimo=ultimo+npdy; nvle(ie,2)=nvle(ie,2)+1;
+0113 <span class="keyword">end</span>
+0114 <span class="keyword">end</span>
+0115 <span class="comment">% by adding the last  &quot;nlevel&quot; rows of the  domain up</span>
+0116 <span class="keyword">for</span> ib=1:nlevel
+0117     nove(ultimo+1:ultimo+npdx,ie)=nov(npdx*ib+1:npdx*(ib+1),ie+1);
+0118 ultimo=ultimo+npdx; nvle(ie,3)=nvle(ie,3)+1;
+0119 <span class="keyword">end</span>
+0120 <span class="comment">% by adding nodes of the element symmetric to &quot;ie&quot; with respect to the vertex</span>
+0121 <span class="keyword">for</span> ib=1:nlevel
+0122     nove(ultimo+1:ultimo+nlevel,ie)=nov(npdx*ib+2:npdx*ib+1+nlevel,ie+ney+1);
+0123 ultimo=ultimo+nlevel;
+0124 <span class="keyword">end</span>
+0125 <span class="keyword">end</span>
+0126 
+0127 <span class="comment">% vertex 4</span>
+0128 
+0129 ig=nov(nm1,ie);
+0130 <span class="keyword">if</span>(ifro(ig)&lt;=0)
+0131 vertex(4)=1;
+0132 <span class="comment">% The vertex is inside Omega, I expand nov</span>
+0133 <span class="keyword">if</span> vertex(1)==0
+0134 <span class="comment">% by adding the last  &quot;nlevel&quot; columns of the left domain</span>
+0135 <span class="keyword">for</span> ib=1:nlevel
+0136     nove(ultimo+1:ultimo+npdy,ie)=nov(nx-ib+1:npdx:mn-ib,ie-ney);
+0137 ultimo=ultimo+npdy; nvle(ie,2)=nvle(ie,2)+1;
+0138 <span class="keyword">end</span>
+0139 <span class="keyword">end</span>
+0140 <span class="keyword">if</span> vertex(3)==0
+0141 <span class="comment">% by adding the last  &quot;nlevel&quot; rows of the  domain up</span>
+0142 <span class="keyword">for</span> ib=1:nlevel
+0143     nove(ultimo+1:ultimo+npdx,ie)=nov(npdx*ib+1:npdx*(ib+1),ie+1);
+0144 ultimo=ultimo+npdx; nvle(ie,3)=nvle(ie,3)+1;
+0145 <span class="keyword">end</span>
+0146 <span class="keyword">end</span>
+0147 <span class="comment">% by adding nodes of the element symmetric to &quot;ie&quot; with respect to the vertex</span>
+0148 <span class="keyword">for</span> ib=1:nlevel
+0149     nove(ultimo+1:ultimo+nlevel,ie)=nov(npdx*(ib+1)-nlevel:npdx*(ib+1)-1,ie-ney+1);
+0150 ultimo=ultimo+nlevel;
+0151 <span class="keyword">end</span>
+0152 <span class="keyword">end</span>
+0153 nvle(ie,1)=ultimo;
+0154 
+0155 <span class="keyword">end</span>  <span class="comment">% end loop ie</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

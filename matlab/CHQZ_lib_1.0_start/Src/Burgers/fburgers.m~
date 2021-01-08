@@ -1,0 +1,22 @@
+function [f]=fburgers(tt,deltat,u0,A,dx,w,visc,uex,uex1,bc);
+% FBURGERS function called by ee.m, rk2.m, rk4.m to solve Burgers eqn.
+%
+%  [f]=fburgers(tt,deltat,u0,A,dx,w,visc,uex,uex1,bc);
+
+%   Written by Paola Gervasio
+%   $Date: 2007/04/01$
+%
+
+np=length(u0);
+b=zeros(np,1);
+if bc ==2
+t=tt;
+x=-1; uu1=eval(uex); ux1=eval(uex1);
+b(1)=0.5*uu1^2-visc*ux1;
+ x=1; uu1=eval(uex); ux1=eval(uex1);
+b(np)=-0.5*uu1^2+visc*ux1;
+end
+f=(b-A*u0+0.5*dx'*diag(w)*(u0.*u0))./w;
+
+return
+

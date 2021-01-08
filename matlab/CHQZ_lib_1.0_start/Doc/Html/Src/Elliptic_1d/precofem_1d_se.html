@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of precofem_1d_se</title>
+  <meta name="keywords" content="precofem_1d_se">
+  <meta name="description" content="PRECOFEM_1D_SE   P1 matrices (stiffness, mass, discrete mass) on macro spectral elements">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Elliptic_1d</a> &gt; precofem_1d_se.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_1d&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>precofem_1d_se
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>PRECOFEM_1D_SE   P1 matrices (stiffness, mass, discrete mass) on macro spectral elements</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [AFE,MFE,MFEd]=precofem_1d_se(AFE,MFE,MFEd,ne,xy,nov,nu,beta,gam,param); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PRECOFEM_1D_SE   P1 matrices (stiffness, mass, discrete mass) on macro spectral elements
+
+ [AFE,MFE,MFEd]=precofem_1d_se(AFE,MFE,MFEd,ne,xy,nov,nu,beta,gam,param);
+
+ Input:  AFE = stiffness P1 matrix
+         MFE = mass P1 matrix
+         MFEd = mass P1 matrix with numerical integration
+         ne =  number of P1 element inside spectral element Omega_ie
+         xy = mesh on the spectral element Omega_ie
+         nov = map mesh Q_n in Omega_ie ---&gt; global mesh in Omega 
+         nu   = viscosity (constant&gt;0)
+         beta  = coefficient of first order term (constant)
+         gam   = coefficient of zeroth order term (constant&gt;=0)
+
+ Output: AFE = stiffness P1 matrix 
+         MFE = mass P1 matrix
+         MFEd = mass P1 matrix with numerical integration
+
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="matricesp1_1d.html" class="code" title="function [Al,Ml,Mld]=matricesp1_1d(nu,beta,gam,jacx,param);">matricesp1_1d</a>	MARICESP1_1D     P1 - Local mass and stiffness matrices on [-1,1]</li><li><a href="nov_p1_1d.html" class="code" title="function [nov_p1,nov_p1_g]=nov_p1_1d(nov);">nov_p1_1d</a>	NOV_P1_1D  P1-FEM Local to global map</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="femp1_preco_1d.html" class="code" title="function [AFE,MFE,MFEd]=femp1_preco_1d(npdx,ne,nov,jacx,xy,nu,beta,gam,param);">femp1_preco_1d</a>	FEMP1_PRECO_1D   P1 (stiffness and mass) matrices for  2-nd order 1D b.v.p.</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [AFE,MFE,MFEd]=precofem_1d_se(AFE,MFE,MFEd,ne,xy,nov,nu,beta,gam,param);</a>
+0002 <span class="comment">% PRECOFEM_1D_SE   P1 matrices (stiffness, mass, discrete mass) on macro spectral elements</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% [AFE,MFE,MFEd]=precofem_1d_se(AFE,MFE,MFEd,ne,xy,nov,nu,beta,gam,param);</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input:  AFE = stiffness P1 matrix</span>
+0007 <span class="comment">%         MFE = mass P1 matrix</span>
+0008 <span class="comment">%         MFEd = mass P1 matrix with numerical integration</span>
+0009 <span class="comment">%         ne =  number of P1 element inside spectral element Omega_ie</span>
+0010 <span class="comment">%         xy = mesh on the spectral element Omega_ie</span>
+0011 <span class="comment">%         nov = map mesh Q_n in Omega_ie ---&gt; global mesh in Omega</span>
+0012 <span class="comment">%         nu   = viscosity (constant&gt;0)</span>
+0013 <span class="comment">%         beta  = coefficient of first order term (constant)</span>
+0014 <span class="comment">%         gam   = coefficient of zeroth order term (constant&gt;=0)</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Output: AFE = stiffness P1 matrix</span>
+0017 <span class="comment">%         MFE = mass P1 matrix</span>
+0018 <span class="comment">%         MFEd = mass P1 matrix with numerical integration</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0022 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0023 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0024 
+0025 <span class="comment">%   Written by Paola Gervasio</span>
+0026 <span class="comment">%   $Date: 2007/04/01$</span>
+0027 
+0028 <span class="comment">%    nov_q1 map: mesh_Q1 -----&gt; mesh Q_N in Omega_ie</span>
+0029 <span class="comment">%    nov_q1_g map: mesh_Q1 -----&gt; global mesh in Omega</span>
+0030 <span class="comment">%</span>
+0031     [nov_p1,nov_p1_g]=<a href="nov_p1_1d.html" class="code" title="function [nov_p1,nov_p1_g]=nov_p1_1d(nov);">nov_p1_1d</a>(nov);
+0032     
+0033 <span class="keyword">for</span> ie_p1=1:ne
+0034     jacx=5.d-1*(xy(nov_p1(2,ie_p1))-xy(nov_p1(1,ie_p1)));
+0035     [Al,Ml,Mld]=<a href="matricesp1_1d.html" class="code" title="function [Al,Ml,Mld]=matricesp1_1d(nu,beta,gam,jacx,param);">matricesp1_1d</a>(nu,beta,gam,jacx,param);
+0036     AFE(nov_p1_g(1:2,ie_p1),nov_p1_g(1:2,ie_p1))=AFE(nov_p1_g(1:2,ie_p1),nov_p1_g(1:2,ie_p1))+Al;
+0037     MFE(nov_p1_g(1:2,ie_p1),nov_p1_g(1:2,ie_p1))=MFE(nov_p1_g(1:2,ie_p1),nov_p1_g(1:2,ie_p1))+Ml;
+0038     MFEd(nov_p1_g(1:2,ie_p1),nov_p1_g(1:2,ie_p1))=MFEd(nov_p1_g(1:2,ie_p1),nov_p1_g(1:2,ie_p1))+Mld;
+0039 <span class="keyword">end</span>
+0040 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

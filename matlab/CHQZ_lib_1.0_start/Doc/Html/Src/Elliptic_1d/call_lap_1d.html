@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of call_lap_1d</title>
+  <meta name="keywords" content="call_lap_1d">
+  <meta name="description" content="CALL_LAP_1D Script for calling lap_1d">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Elliptic_1d</a> &gt; call_lap_1d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_1d&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>call_lap_1d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CALL_LAP_1D Script for calling lap_1d</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CALL_LAP_1D Script for calling lap_1d</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="lap_1d.html" class="code" title="function [xy,un,err_inf,err_l2,err_h1]=lap_1d(xa,xb,nu,gam,uex,uexx,ff,cb,ne,nx,param);">lap_1d</a>	LAP_1D   SEM appx of the 1D b.v.p. -nu u''+gam u=f</li><li><a href="../../Src/Level_1/setfun_lap_1d.html" class="code" title="function [uex,uexx,ff,nu,gam]=setfun_lap_1d">setfun_lap_1d</a>	SETFUN_LAP_1D  Sets functions and coefficients for lap_1d, precolap_1d</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% CALL_LAP_1D Script for calling lap_1d</span>
+0002 
+0003 xa=-1;xb=1; 
+0004 
+0005 <span class="comment">% set functions</span>
+0006 
+0007 [uex,uexx,ff,nu,gam]=<a href="../../Src/Level_1/setfun_lap_1d.html" class="code" title="function [uex,uexx,ff,nu,gam]=setfun_lap_1d">setfun_lap_1d</a>;
+0008 
+0009 nomefile=[<span class="string">'out.dat'</span>];
+0010 cb=<span class="string">'nd'</span>; <span class="comment">% c.b.: the first character specifies boundary condition in xa</span>
+0011         <span class="comment">% the second character specifies boundary condition in xb</span>
+0012 fid=fopen(nomefile,<span class="string">'w'</span>);
+0013 fprintf(fid,<span class="string">'1D Laplace problem, SEM\n'</span>);
+0014 fprintf(fid,<span class="string">'nx, ne   e_inf  e_l2   e_h1 \n'</span>);
+0015 param=zeros(10,1);
+0016 
+0017 nnx=4:4:24;
+0018 <span class="keyword">for</span> ne=10; <span class="comment">%[10,20,40,80,160] % number of spectral elements</span>
+0019 <span class="keyword">for</span> nx=nnx <span class="comment">% spectral polynomial degree (the same in every element)</span>
+0020     H=(xb-xa)/ne;
+0021 param(1:6)=[1,1,nx*2,1,1,64]; <span class="comment">% see help adr_1d</span>
+0022 [xy,un,err_inf,err_l2,err_h1]=<a href="lap_1d.html" class="code" title="function [xy,un,err_inf,err_l2,err_h1]=lap_1d(xa,xb,nu,gam,uex,uexx,ff,cb,ne,nx,param);">lap_1d</a>(xa,xb,nu,gam,uex,uexx,ff,cb,ne,nx,param);
+0023 noe=length(xy);
+0024 fprintf(<span class="string">'nx=%d, ne=%d, e_inf=%8.2e, e_l2=%8.2e, e_h1=%8.2e \n'</span>,<span class="keyword">...</span>
+0025     nx,ne,err_inf,err_l2,err_h1);
+0026 fprintf(fid,<span class="string">'%d   %d   %8.2e   %8.2e    %8.2e \n'</span>,<span class="keyword">...</span>
+0027     nx, ne,err_inf,err_l2,err_h1);
+0028 <span class="keyword">end</span>
+0029 <span class="keyword">end</span>
+0030 fclose(fid);
+0031</pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

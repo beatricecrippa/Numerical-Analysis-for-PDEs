@@ -1,0 +1,44 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  call_eig_schur_2d -> eig_schur_2d;
+  call_eig_schur_2d_file -> eig_schur_2d;
+  call_schur_2d -> schur_2d;
+  eig_schur_2d -> cosnovg;
+  eig_schur_2d -> cosnovi;
+  eig_schur_2d -> cosrgam;
+  eig_schur_2d -> partition;
+  eig_schur_2d -> schur_matrix;
+  schur_2d -> cosnovg;
+  schur_2d -> cosnovi;
+  schur_2d -> cosrgam;
+  schur_2d -> local_solver;
+  schur_2d -> partition;
+  schur_2d -> pinv_sigma;
+  schur_2d -> schur_loc;
+  schur_2d -> schur_pcg;
+  schur_pcg -> schur_mxv;
+  schur_pcg -> schur_precobnn;
+  schur_pcg -> schur_preconnl;
+  schur_precobnn -> schur_mxv;
+  schur_precobnn -> schur_preconnl;
+
+  call_eig_schur_2d [URL="call_eig_schur_2d.html"];
+  call_eig_schur_2d_file [URL="call_eig_schur_2d_file.html"];
+  call_schur_2d [URL="call_schur_2d.html"];
+  cosnovg [URL="cosnovg.html"];
+  cosnovi [URL="cosnovi.html"];
+  cosrgam [URL="cosrgam.html"];
+  costanti [URL="costanti.html"];
+  eig_schur_2d [URL="eig_schur_2d.html"];
+  local_solver [URL="local_solver.html"];
+  partition [URL="partition.html"];
+  pinv_sigma [URL="pinv_sigma.html"];
+  schur_2d [URL="schur_2d.html"];
+  schur_assemb [URL="schur_assemb.html"];
+  schur_loc [URL="schur_loc.html"];
+  schur_matrix [URL="schur_matrix.html"];
+  schur_mxv [URL="schur_mxv.html"];
+  schur_pcg [URL="schur_pcg.html"];
+  schur_precobnn [URL="schur_precobnn.html"];
+  schur_preconnl [URL="schur_preconnl.html"];
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of call_ell_1d</title>
+  <meta name="keywords" content="call_ell_1d">
+  <meta name="description" content="CALL_ELL_1D Script to produce results of fig. 4.17, pag. 207, CHQZ2">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Elliptic_1d</a> &gt; call_ell_1d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_1d&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>call_ell_1d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CALL_ELL_1D Script to produce results of fig. 4.17, pag. 207, CHQZ2</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CALL_ELL_1D Script to produce results of fig. 4.17, pag. 207, CHQZ2
+
+ -nu d^2 u/dx^2 +du/dx=1  in (-1,1)
+
+   u(-1)=u(1)=0
+
+
+  Generalized Numerical integration, one element</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="ell_1d.html" class="code" title="function [xy,un]=ell_1d(xa,xb,nu,beta,gam,ff,cb,ub,ne,nx);">ell_1d</a>	ELL_1D   Numerical solution of the 1D elliptic boundary value problem (4.3.17) pag. 208, CHQZ2</li><li><a href="../../Src/Level_0/legendre_tr_eval.html" class="code" title="function [u_int]=legendre_tr_eval(x,u,x_int);">legendre_tr_eval</a>	LEGENDRE_TR_EVAL     Evaluates Discrete Legendre Transform</li><li><a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>	XWLGL Computes nodes and weights of the Legendre-Gauss-Lobatto quadrature formula.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% CALL_ELL_1D Script to produce results of fig. 4.17, pag. 207, CHQZ2</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% -nu d^2 u/dx^2 +du/dx=1  in (-1,1)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   u(-1)=u(1)=0</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  Generalized Numerical integration, one element</span>
+0009 <span class="comment">%</span>
+0010 
+0011 xa=-1;xb=1;  
+0012 ub=[0,0];
+0013 nu=1.d-2; beta=1;  gam=0; ff=@(x)[1];
+0014 ne=1; cb=<span class="string">'dd'</span>;
+0015 nnx=[12,20,72]; <span class="comment">% for nu=1.d-2</span>
+0016 
+0017 fig=figure(<span class="keyword">...</span><span class="comment">,</span>
+0018 <span class="string">'Name'</span>, <span class="string">'Advection-diffusion solution nu=1.d-2'</span>,<span class="keyword">...</span>
+0019 <span class="string">'Visible'</span>,<span class="string">'on'</span>)
+0020 color=[<span class="string">'k-.'</span>;<span class="string">'k--'</span>;<span class="string">'k- '</span>];
+0021 hold on
+0022 knx=0;
+0023 <span class="keyword">for</span> nx=nnx
+0024 [xy,un]=<a href="ell_1d.html" class="code" title="function [xy,un]=ell_1d(xa,xb,nu,beta,gam,ff,cb,ub,ne,nx);">ell_1d</a>(xa,xb,nu,beta,gam,ff,cb,ub,ne,nx);
+0025 knx=knx+1;
+0026 <span class="comment">% evaluation of numerical solution at a finer grid to plot it</span>
+0027 nx1=100;
+0028 x_int=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(nx1);
+0029 [u_int]=<a href="../../Src/Level_0/legendre_tr_eval.html" class="code" title="function [u_int]=legendre_tr_eval(x,u,x_int);">legendre_tr_eval</a>(xy,un,x_int);
+0030 <span class="comment">% evaluation of the polynomial at x_int (finer mesh with respect to x)</span>
+0031 <span class="keyword">if</span>(knx&lt;=3)
+0032 h(knx)=plot(x_int,u_int,color(knx,:));
+0033 <span class="keyword">else</span>
+0034 h(knx)=plot(xx,u1,color(knx,:));
+0035 <span class="keyword">end</span>
+0036 <span class="keyword">end</span>
+0037 hl1=legend(<span class="string">'N=12'</span>,<span class="string">'N=20'</span>,<span class="string">'N=72'</span>);
+0038 set(hl1,<span class="string">'Position'</span>,[0.145,0.621,0.25,0.209]);
+0039 set(gca,<span class="string">'XlimMode'</span>,<span class="string">'manual'</span>,<span class="string">'Xlim'</span>,[-1,1.001],<span class="keyword">...</span>
+0040 <span class="string">'YlimMode'</span>,<span class="string">'manual'</span>,<span class="string">'Ylim'</span>,[0,3])
+0041 set(hl1,<span class="string">'FontName'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,16);
+0042 set(h(1),<span class="string">'Linewidth'</span>,1);
+0043 set(h(2),<span class="string">'Linewidth'</span>,1);
+0044 set(h(3),<span class="string">'Linewidth'</span>,2);
+0045 set(gca,<span class="string">'PlotBoxAspectRatio'</span>,[3 2 1],<span class="keyword">...</span>
+0046 <span class="string">'Xgrid'</span>,<span class="string">'on'</span>,<span class="string">'XminorGrid'</span>,<span class="string">'off'</span>,<span class="string">'Ygrid'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+0047 <span class="string">'YminorGrid'</span>,<span class="string">'off'</span>,<span class="string">'LineWidth'</span>,1,<span class="keyword">...</span>
+0048 <span class="string">'FontName'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,16)
+0049 xlabel(<span class="string">'x'</span>,<span class="string">'FontName'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,16)
+0050 hold off
+0051 
+0052 
+0053 nu=1.d-3; beta=1;  gam=0; ff=@(x)[1];
+0054 ne=1;
+0055 nnx=[48,72,104]; <span class="comment">% for nu=1.d-2</span>
+0056 
+0057 fig=figure(<span class="keyword">...</span><span class="comment">,</span>
+0058 <span class="string">'Name'</span>, <span class="string">'Advection-diffusion solution nu=1.d-3'</span>,<span class="keyword">...</span>
+0059 <span class="string">'Visible'</span>,<span class="string">'on'</span>)
+0060 color=[<span class="string">'k-.'</span>;<span class="string">'k--'</span>;<span class="string">'k- '</span>];
+0061 hold on
+0062 knx=0;
+0063 <span class="keyword">for</span> nx=nnx
+0064 [xy,un]=<a href="ell_1d.html" class="code" title="function [xy,un]=ell_1d(xa,xb,nu,beta,gam,ff,cb,ub,ne,nx);">ell_1d</a>(xa,xb,nu,beta,gam,ff,cb,ub,ne,nx);
+0065 knx=knx+1;
+0066 <span class="comment">% evaluation of numerical solution at a finer grid to plot it</span>
+0067 nx1=300;
+0068 x_int=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(nx1);
+0069 [u_int]=<a href="../../Src/Level_0/legendre_tr_eval.html" class="code" title="function [u_int]=legendre_tr_eval(x,u,x_int);">legendre_tr_eval</a>(xy,un,x_int);
+0070 <span class="comment">% evaluation of the polynomial at x_int (finer mesh with respect to x)</span>
+0071 <span class="keyword">if</span>(knx&lt;=3)
+0072 h(knx)=plot(x_int,u_int,color(knx,:));
+0073 <span class="keyword">else</span>
+0074 h(knx)=plot(xx,u1,color(knx,:));
+0075 <span class="keyword">end</span>
+0076 <span class="keyword">end</span>
+0077 hl1=legend(<span class="string">'N=48'</span>,<span class="string">'N=72'</span>,<span class="string">'N=104'</span>);
+0078 set(hl1,<span class="string">'Position'</span>,[0.145,0.621,0.25,0.209]);
+0079 set(gca,<span class="string">'XlimMode'</span>,<span class="string">'manual'</span>,<span class="string">'Xlim'</span>,[-1,1.001],<span class="keyword">...</span>
+0080 <span class="string">'YlimMode'</span>,<span class="string">'manual'</span>,<span class="string">'Ylim'</span>,[0,3])
+0081 set(hl1,<span class="string">'FontName'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,16);
+0082 set(h(1),<span class="string">'Linewidth'</span>,1);
+0083 set(h(2),<span class="string">'Linewidth'</span>,1);
+0084 set(h(3),<span class="string">'Linewidth'</span>,2);
+0085 set(gca,<span class="string">'PlotBoxAspectRatio'</span>,[3 2 1],<span class="keyword">...</span>
+0086 <span class="string">'Xgrid'</span>,<span class="string">'on'</span>,<span class="string">'XminorGrid'</span>,<span class="string">'off'</span>,<span class="string">'Ygrid'</span>,<span class="string">'on'</span>,<span class="keyword">...</span>
+0087 <span class="string">'YminorGrid'</span>,<span class="string">'off'</span>,<span class="string">'LineWidth'</span>,1,<span class="keyword">...</span>
+0088 <span class="string">'FontName'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,16)
+0089 xlabel(<span class="string">'x'</span>,<span class="string">'FontName'</span>,<span class="string">'Times'</span>,<span class="string">'Fontsize'</span>,16)
+0090 hold off
+0091 
+0092 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cosnovg</title>
+  <meta name="keywords" content="cosnovg">
+  <meta name="description" content="COSNOVG : constructs matrix novg realizing operator R_{\Gamma_m}">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="../index.html">Elliptic_2d</a> &gt; <a href="index.html">Schur</a> &gt; cosnovg.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_2d/Schur&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>cosnovg
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>COSNOVG : constructs matrix novg realizing operator R_{\Gamma_m}</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [novg]=cosnovg(xyi,noei,ifroi,lgamma,ldnov,novi,nvli); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> COSNOVG : constructs matrix novg realizing operator R_{\Gamma_m}
+
+   R_{\Gamma_m}: the restriction operator from the vector 
+   of coefficient unknowns related
+   to the nodes of Gamma to only those associated with Gamma_m=Gamma \cap
+   \partial\Omega_m.  (see CHQZ3, pag. 394)
+
+ [novg]=cosnovg(xyi,noei,ifroi,lgamma,ldnov,novi,nvli);
+
+ Input: xyi = 2-indexes array of coordinates of nodes internal to Omega
+        noei = number of nodes internal to Omega
+        ifroi =  restriction of ifro to nodes internal to Omega
+        lgamma =  list of those nodes of Omega (without boundary) which
+        belong to Gamma
+        ldnov, leading dimension of nov
+        novi = 2-indexes array of size (max(nvli),ne), computed in cosnovi
+        nvli = column array. nvli(ie) is the number of nodes of \Omega_ie
+        internal to Omega.
+
+ Output: novg = 2-indexes array of size (ldnov,ne)
+         novg(i,ie)= 0 if node x_i of Omega_ie does not belong to Gamma
+                    = j if node x_i of Omega_ie is the node j of Gamma 
+
+ References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.
+             CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Evolution to Complex Geometries 
+                     and Applications to Fluid DynamicsSpectral Methods&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2007.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="eig_schur_2d.html" class="code" title="function [param]=eig_schur_2d(xa,xb,ya,yb,gam,cb,nex,nx,ney,ny,gammax,gammay,param);">eig_schur_2d</a>	EIG_SCHUR_2D   Eigenvalues computation Schur complement matrix</li><li><a href="schur_2d.html" class="code" title="function [xy,un,param]=schur_2d(xa,xb,ya,yb,gam,uex,uex_x,uex_y,ff,g,h,cb,nex,nx,ney,ny,gammax,gammay,param);">schur_2d</a>	SCHUR_2D   Numerical solution of the 2D b.v.p. -Delta u + gam u -Schur complement</li></ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [novg]=cosnovg(xyi,noei,ifroi,lgamma,ldnov,novi,nvli);</a>
+0002 <span class="comment">% COSNOVG : constructs matrix novg realizing operator R_{\Gamma_m}</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   R_{\Gamma_m}: the restriction operator from the vector</span>
+0005 <span class="comment">%   of coefficient unknowns related</span>
+0006 <span class="comment">%   to the nodes of Gamma to only those associated with Gamma_m=Gamma \cap</span>
+0007 <span class="comment">%   \partial\Omega_m.  (see CHQZ3, pag. 394)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% [novg]=cosnovg(xyi,noei,ifroi,lgamma,ldnov,novi,nvli);</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Input: xyi = 2-indexes array of coordinates of nodes internal to Omega</span>
+0012 <span class="comment">%        noei = number of nodes internal to Omega</span>
+0013 <span class="comment">%        ifroi =  restriction of ifro to nodes internal to Omega</span>
+0014 <span class="comment">%        lgamma =  list of those nodes of Omega (without boundary) which</span>
+0015 <span class="comment">%        belong to Gamma</span>
+0016 <span class="comment">%        ldnov, leading dimension of nov</span>
+0017 <span class="comment">%        novi = 2-indexes array of size (max(nvli),ne), computed in cosnovi</span>
+0018 <span class="comment">%        nvli = column array. nvli(ie) is the number of nodes of \Omega_ie</span>
+0019 <span class="comment">%        internal to Omega.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Output: novg = 2-indexes array of size (ldnov,ne)</span>
+0022 <span class="comment">%         novg(i,ie)= 0 if node x_i of Omega_ie does not belong to Gamma</span>
+0023 <span class="comment">%                    = j if node x_i of Omega_ie is the node j of Gamma</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% References: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0026 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0027 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0028 <span class="comment">%             CHQZ3 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0029 <span class="comment">%                    &quot;Spectral Methods. Evolution to Complex Geometries</span>
+0030 <span class="comment">%                     and Applications to Fluid DynamicsSpectral Methods&quot;</span>
+0031 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2007.</span>
+0032 
+0033 <span class="comment">%   Written by Paola Gervasio</span>
+0034 <span class="comment">%   $Date: 2007/04/01$</span>
+0035 
+0036 
+0037 
+0038 ngamma=length(lgamma);
+0039 ne=length(nvli);
+0040 novg=zeros(ldnov,ne);
+0041 <span class="keyword">for</span> ie=1:ne
+0042 mn=nvli(ie);
+0043 <span class="keyword">for</span> i=1:mn
+0044 ig=novi(i,ie);
+0045 <span class="keyword">if</span>(ifroi(ig)==-1)
+0046 x=xyi(ig,1); y=xyi(ig,2);
+0047 trov=0; j=0;
+0048 <span class="keyword">while</span> j &lt;=ngamma &amp; trov==0
+0049 j=j+1; 
+0050 x1=xyi(lgamma(j),1); y1=xyi(lgamma(j),2);
+0051 <span class="keyword">if</span>(x==x1 &amp; y==y1)
+0052 trov=1; novg(i,ie)=j;
+0053 <span class="keyword">end</span>
+0054 <span class="keyword">end</span>
+0055 <span class="keyword">end</span>
+0056 <span class="keyword">end</span>
+0057 <span class="keyword">end</span>
+0058 
+0059 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

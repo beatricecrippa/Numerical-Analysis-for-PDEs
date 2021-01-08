@@ -1,0 +1,44 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  call_eig_schwarz_2d -> eig_schwarz_2d;
+  call_schwarz_2d -> schwarz_2d;
+  eig_schwarz_2d -> cosnovenew;
+  eig_schwarz_2d -> matr0t;
+  eig_schwarz_2d -> partition_e;
+  eig_schwarz_2d -> precoasc;
+  eig_schwarz_2d -> stiffq1;
+  eig_schwarz_2d -> stiffq1H;
+  schwarz_2d -> cosnovenew;
+  schwarz_2d -> matr0t;
+  schwarz_2d -> partition_e;
+  schwarz_2d -> schwarz_pbcgstab;
+  schwarz_2d -> schwarz_pcg;
+  schwarz_2d -> stiffq1;
+  schwarz_2d -> stiffq1H;
+  schwarz_pbcgstab -> precoasc;
+  schwarz_pcg -> precoasc;
+  stiffq1 -> liste2;
+  stiffq1 -> meshq1_ie;
+  stiffq1 -> reorder;
+  stiffq1 -> stiffq1_se;
+  stiffq1H -> meshq1_coarse;
+  stiffq1H -> stiffq1_se;
+
+  call_eig_schwarz_2d [URL="call_eig_schwarz_2d.html"];
+  call_schwarz_2d [URL="call_schwarz_2d.html"];
+  cosnovenew [URL="cosnovenew.html"];
+  eig_schwarz_2d [URL="eig_schwarz_2d.html"];
+  liste2 [URL="liste2.html"];
+  matr0t [URL="matr0t.html"];
+  meshq1_coarse [URL="meshq1_coarse.html"];
+  meshq1_ie [URL="meshq1_ie.html"];
+  partition_e [URL="partition_e.html"];
+  precoasc [URL="precoasc.html"];
+  reorder [URL="reorder.html"];
+  schwarz_2d [URL="schwarz_2d.html"];
+  schwarz_pbcgstab [URL="schwarz_pbcgstab.html"];
+  schwarz_pcg [URL="schwarz_pcg.html"];
+  stiffq1 [URL="stiffq1.html"];
+  stiffq1H [URL="stiffq1H.html"];
+  stiffq1_se [URL="stiffq1_se.html"];
+}

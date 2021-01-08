@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plot_mesh</title>
+  <meta name="keywords" content="plot_mesh">
+  <meta name="description" content="PLOT_MESH Script for plotting SEM mesh  on a rectangle">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Elliptic_2d</a> &gt; plot_mesh.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Elliptic_2d&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>plot_mesh
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>PLOT_MESH Script for plotting SEM mesh  on a rectangle</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PLOT_MESH Script for plotting SEM mesh  on a rectangle</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>	XWLGL Computes nodes and weights of the Legendre-Gauss-Lobatto quadrature formula.</li><li><a href="../../Src/Level_2/cosnov_2d.html" class="code" title="function [nov]=cosnov_2d(npdx,nex,npdy,ney);">cosnov_2d</a>	COSNOV_2D : Constructs the 2D (local mesh ---> global mesh) map</li><li><a href="../../Src/Level_2/mesh_2d.html" class="code" title="function[xx,yy,jacx,jacy,xy,ww,ifro]=mesh2d(xa,xb,ya,yb,cb,nex,ney,npdx,npdy,nov,x,wx,y,wy,gammax,gammay)">mesh_2d</a>	MESH2D   Uniform 2D SEM mesh on rectangular domain Omega=(xa,xb) x (ya,yb)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% PLOT_MESH Script for plotting SEM mesh  on a rectangle</span>
+0002 <span class="comment">%</span>
+0003 xa=-1;xb=1;   <span class="comment">% Omega=(xa,xb) x (ya,yb)</span>
+0004 ya=-1;yb=1;
+0005 cb=<span class="string">'dddd'</span>;
+0006 nex=1;
+0007     ney=nex;  <span class="comment">% decomposition of Omega in nex x ney rectangles</span>
+0008 nx=12;
+0009     ny=nx;     <span class="comment">% polynomial degree in each element along y-direction</span>
+0010 gammax=[]; gammay=[]; 
+0011 xy=[]; 
+0012 
+0013 npdx=nx+1; npdy=ny+1; ldnov=npdx*npdy; mn=ldnov; ne=nex*ney;
+0014 
+0015 [x,wx]=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdx);
+0016 [y,wy]=<a href="../../Src/Level_0/xwlgl.html" class="code" title="function [x,w] = xwlgl(np,a,b)">xwlgl</a>(npdy);
+0017 <span class="comment">%</span>
+0018 <span class="comment">% nov construction</span>
+0019 <span class="comment">%</span>
+0020 [nov]=<a href="../../Src/Level_2/cosnov_2d.html" class="code" title="function [nov]=cosnov_2d(npdx,nex,npdy,ney);">cosnov_2d</a>(npdx,nex,npdy,ney);
+0021 noe=nov(ldnov,ne);
+0022 
+0023 <span class="comment">% Mesh generation</span>
+0024 
+0025 [xx,yy,jacx,jacy,xy,ww,ifro]=<a href="../../Src/Level_2/mesh_2d.html" class="code" title="function[xx,yy,jacx,jacy,xy,ww,ifro]=mesh2d(xa,xb,ya,yb,cb,nex,ney,npdx,npdy,nov,x,wx,y,wy,gammax,gammay)">mesh_2d</a>(xa,xb,ya,yb,cb,nex,ney,npdx,npdy,<span class="keyword">...</span>
+0026 nov,x,wx,y,wy,gammax,gammay);
+0027 nm=npdx*(npdy-1);
+0028 plot(xy(:,1),xy(:,2),<span class="string">'ko'</span>,<span class="string">'markerfacecolor'</span>,<span class="string">'k'</span>,<span class="string">'markersize'</span>,4);hold on
+0029 <span class="keyword">for</span> j=1:npdy
+0030     plot([xy((j-1)*npdx+1,1),xy(j*npdx,1)],[y(j),y(j)],<span class="string">'k'</span>);
+0031 <span class="keyword">end</span>
+0032 <span class="keyword">for</span> i=1:npdx
+0033     plot([x(i),x(i)],[xy(1,2),xy(nm+i,2)],<span class="string">'k'</span>);
+0034 <span class="keyword">end</span>
+0035 axis equal
+0036 axis off
+0037 text(-0.14,0.16,<span class="string">'h'</span>,<span class="string">'Fontsize'</span>,16)
+0038 plot([xy(85,1),xy(97,1)],[xy(85,2),xy(97,2)],<span class="string">'r'</span>,<span class="string">'Linewidth'</span>,2);
+0039 hold off
+0040 print(1,<span class="string">'-deps2'</span>,<span class="string">'mesh2d'</span>)</pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>

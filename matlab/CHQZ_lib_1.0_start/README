@@ -1,0 +1,53 @@
+CHQZ_lib Version 1.0, 2007 May.
+
+Spectral Element Library 
+===================================
+
+Functions developed in this library provide the numerical solution of
+some simple boundary value problems in 1D, 2D and 3D geometries by
+either Spectral Methods with Galerkin-Numerical Integration (G-NI), in
+the case of single domain formulation, or
+Spectral Element Methods with Numerical Integration (SEM-NI), in the case
+of multi-domain formulation. 
+Extrema eigenvalues of discrete operators are also computed in some cases.
+
+The present library includes matlab files we have used to produce some
+numerical results published in the books:
+
+C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+Spectral Methods. Fundamentals in Single Domains,
+Springer Verlag, Berlin Heidelberg New York, 2006;
+
+and
+
+C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+Spectral Methods. Evolution to Complex Geometries
+ and Applications to Fluid Dynamics, 
+Springer Verlag, Berlin Heidelberg New York, 2007.
+
+
+
+
+ INSTALLATION
+ ============
+
+ Please read the INSTALL file for installation instructions.
+
+
+ TUTORIAL
+ =========
+
+Doc/LaTex/UserGuide.pdf   (a simple user guide)
+
+Doc/Html/index.html   (on-line documentation  produced with M2HTML by 
+                       Guillaume Flandin.
+                       Copyright (C) 2003 Guillaume Flandin 
+                       <Guillaume@artefact.tk>)
+
+-------------------------------------------------------------------------------
+ Matlab is a Registered Trademark of The Mathworks, Inc.
+
+
+Copyright (C) 2007 Paola Gervasio <paola.gervasio@unibs.it>)
+
+

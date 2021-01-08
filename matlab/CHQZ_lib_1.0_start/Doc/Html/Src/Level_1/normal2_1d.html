@@ -1,0 +1,204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of normal2_1d</title>
+  <meta name="keywords" content="normal2_1d">
+  <meta name="description" content="NORMAL2_1D   Computes L2-norm in 1D">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2003 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">Src</a> &gt; <a href="index.html">Level_1</a> &gt; normal2_1d.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for Src/Level_1&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>normal2_1d
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>NORMAL2_1D   Computes L2-norm in 1D</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [err_l2]=normal2_1d(fdq, nq, errtype, u, uex,x, wx, xx, jacx, xy,nov) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> NORMAL2_1D   Computes L2-norm in 1D
+
+  [err_h1]=normah1_1d(fdq, nq, errtype, u, uex, ...
+            x, wx, xx, jacx, xy,nov)
+
+ Input : fdq = 0  uses Legendre Gauss quadrature formulas with nq nodes
+               in each element (exactness degree = 2*nq+1)
+             = 1   uses Legendre Gauss Lobatto quadrature formulas on the 
+               nodes in which the discrete function is knonwn.
+         nq = nodes (in each elemetn) for GL quadrature formulas. Not used if
+              fdq=1
+         errtype = 0 for absolute error ||u-u_ex||
+                   1 for relative error ||u-u_ex||/||u_ex||
+         u = numerical solution, column array of length noe
+         uex  = exact solution (uex=@(x)[uex(x)], with .*, .^, ./)
+         x = column array  with LGL nodes in [-1,1]
+         wx= column array  with LGL weigths in [-1,1]
+         xx = 2-indexes array of size (2,ne): xx(1:2,ie)=[xa_ie;xb_ie]
+         jacx = column array of length = ne, containing 
+                jacobians of the maps F_ie:[-1,1]----&gt;[xa_ie,xb_ie]
+         xy = mesh, column array of length noe
+         nov = local to global map. 2-indexes array, size(nov)=[nov,ne]
+
+ Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,
+                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;
+                    Springer Verlag, Berlin Heidelberg New York, 2006.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Level_0/intlag_lgl.html" class="code" title="function [a]=intlag_lgl(x_lgl, x_new);">intlag_lgl</a>	INTLAG_LGL  Computes matrix "a" to evaluate 1D Lagrange interpolant at LGL</li><li><a href="../../Src/Level_0/xwlg.html" class="code" title="function [x,w] = xwlg(np,a,b)">xwlg</a>	XWLG  Computes nodes and weights of the Legendre-Gauss  quadrature formula.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../Src/Elliptic_1d/adr_1d.html" class="code" title="function [xy,un,err_inf,err_l2,err_h1,der]=adr_1d(xa,xb,nu,beta,gam,uex,uexx,ff,cb,ne,p,nx,param);">adr_1d</a>	ADR_1D   Numerical solution of the 1D boundary value problem (1.2.52)-(1.2.53), pag. 17, CHQZ2</li><li><a href="../../Src/Elliptic_1d/lap_1d.html" class="code" title="function [xy,un,err_inf,err_l2,err_h1]=lap_1d(xa,xb,nu,gam,uex,uexx,ff,cb,ne,nx,param);">lap_1d</a>	LAP_1D   SEM appx of the 1D b.v.p. -nu u''+gam u=f</li><li><a href="errors_1d.html" class="code" title="function [err_inf,err_h1,err_l2]=errors_1d(nx,ne,xa,xb,un,uex,uexx,param);">errors_1d</a>	ERRORS_1D Computes errors  for 1D b.v.p.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [norma_loc1,norma_loc2]=normal2_ex_loc(errtype,npdx,uex,</a></li><li><a href="#_sub2" class="code">function [norma_loc1,norma_loc2]=normal2_loc(errtype,npdx,uex,uloc,</a></li></ul>
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [err_l2]=normal2_1d(fdq, nq, errtype, u, uex, </a><span class="keyword">...</span>
+0002  x, wx, xx, jacx, xy,nov)
+0003 <span class="comment">% NORMAL2_1D   Computes L2-norm in 1D</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%  [err_h1]=normah1_1d(fdq, nq, errtype, u, uex, ...</span>
+0006 <span class="comment">%            x, wx, xx, jacx, xy,nov)</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Input : fdq = 0  uses Legendre Gauss quadrature formulas with nq nodes</span>
+0009 <span class="comment">%               in each element (exactness degree = 2*nq+1)</span>
+0010 <span class="comment">%             = 1   uses Legendre Gauss Lobatto quadrature formulas on the</span>
+0011 <span class="comment">%               nodes in which the discrete function is knonwn.</span>
+0012 <span class="comment">%         nq = nodes (in each elemetn) for GL quadrature formulas. Not used if</span>
+0013 <span class="comment">%              fdq=1</span>
+0014 <span class="comment">%         errtype = 0 for absolute error ||u-u_ex||</span>
+0015 <span class="comment">%                   1 for relative error ||u-u_ex||/||u_ex||</span>
+0016 <span class="comment">%         u = numerical solution, column array of length noe</span>
+0017 <span class="comment">%         uex  = exact solution (uex=@(x)[uex(x)], with .*, .^, ./)</span>
+0018 <span class="comment">%         x = column array  with LGL nodes in [-1,1]</span>
+0019 <span class="comment">%         wx= column array  with LGL weigths in [-1,1]</span>
+0020 <span class="comment">%         xx = 2-indexes array of size (2,ne): xx(1:2,ie)=[xa_ie;xb_ie]</span>
+0021 <span class="comment">%         jacx = column array of length = ne, containing</span>
+0022 <span class="comment">%                jacobians of the maps F_ie:[-1,1]----&gt;[xa_ie,xb_ie]</span>
+0023 <span class="comment">%         xy = mesh, column array of length noe</span>
+0024 <span class="comment">%         nov = local to global map. 2-indexes array, size(nov)=[nov,ne]</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Reference: CHQZ2 = C. Canuto, M.Y. Hussaini, A. Quarteroni, T.A. Zang,</span>
+0027 <span class="comment">%                    &quot;Spectral Methods. Fundamentals in Single Domains&quot;</span>
+0028 <span class="comment">%                    Springer Verlag, Berlin Heidelberg New York, 2006.</span>
+0029 
+0030 <span class="comment">%   Written by Paola Gervasio</span>
+0031 <span class="comment">%   $Date: 2007/04/01$</span>
+0032 
+0033 
+0034 npdx=length(x); [ldnov,ne]=size(nov); noe=nov(npdx,ne);
+0035 num=0; den=0;
+0036 err_l2=0;
+0037 
+0038 <span class="keyword">if</span> fdq==0
+0039 
+0040 <span class="comment">% Legendre Gauss nodes and weigths</span>
+0041 
+0042 [xg,wxg] = <a href="../../Src/Level_0/xwlg.html" class="code" title="function [x,w] = xwlg(np,a,b)">xwlg</a>(nq,-1,1);
+0043 
+0044 <span class="comment">% Evaluation of Lagrange basis polynomials at quadrature nodes xg</span>
+0045 <span class="comment">%</span>
+0046 [phix]= <a href="../../Src/Level_0/intlag_lgl.html" class="code" title="function [a]=intlag_lgl(x_lgl, x_new);">intlag_lgl</a> (x,xg);
+0047 
+0048 <span class="comment">% Loop on spectral elements</span>
+0049 <span class="keyword">for</span> ie=1:ne
+0050 u_loc=u(nov(1:npdx,ie));
+0051 [norma_loc1,norma_loc2]=<a href="#_sub1" class="code" title="subfunction [norma_loc1,norma_loc2]=normal2_ex_loc(errtype,npdx,uex,">normal2_ex_loc</a>(errtype,npdx,uex,<span class="keyword">...</span>
+0052  u_loc,x,jacx(ie),xx(1:2,ie),xg,wxg,nq,phix);
+0053 num=num+norma_loc1;
+0054 den=den+norma_loc2;
+0055 <span class="keyword">end</span>
+0056 
+0057 
+0058 <span class="keyword">elseif</span> fdq==1
+0059 <span class="keyword">for</span> ie=1:ne
+0060 u_loc=u(nov(1:npdx,ie));
+0061 xy_loc=xy(nov(1:npdx,ie));
+0062 [norma_loc1,norma_loc2]=<a href="#_sub2" class="code" title="subfunction [norma_loc1,norma_loc2]=normal2_loc(errtype,npdx,uex,uloc,">normal2_loc</a>(errtype,npdx,uex,<span class="keyword">...</span>
+0063  u_loc,xy_loc, wx,jacx(ie));
+0064 num=num+norma_loc1;
+0065 den=den+norma_loc2;
+0066 <span class="keyword">end</span>
+0067 <span class="keyword">end</span>
+0068 
+0069 <span class="keyword">if</span> errtype==0
+0070     err_l2=sqrt(num);
+0071 <span class="keyword">elseif</span> errtype==1
+0072     <span class="keyword">if</span> abs(den)&gt;1.d-14; err_l2=sqrt(num/den); <span class="keyword">end</span>
+0073 <span class="keyword">end</span>
+0074 
+0075 <span class="keyword">return</span>
+0076 
+0077 <a name="_sub1" href="#_subfunctions" class="code">function [norma_loc1,norma_loc2]=normal2_ex_loc(errtype,npdx,uex,</a><span class="keyword">...</span>
+0078  u, x,jacx,xx,xg,wxg,nq,phix);
+0079 
+0080 <span class="comment">% High degree Legendre Gaussian  formulas to compute L2-norm error</span>
+0081 
+0082 <span class="comment">% mapping quadrature nodes on element ie</span>
+0083 
+0084 xxg=xg*jacx+(xx(2)+xx(1))*.5;
+0085 
+0086 <span class="comment">% evaluation of exact solution at quadrature nodes.</span>
+0087 
+0088 U=uex(xxg);
+0089 
+0090 
+0091 <span class="comment">% evaluate numerical solution and its derivative at quadrature nodes.</span>
+0092 
+0093 u_i=phix*u;
+0094 <span class="comment">%  figure(1)</span>
+0095 <span class="comment">%  mesh(xxg,yyg,reshape(U,npx,npy));</span>
+0096 <span class="comment">%  figure(2)</span>
+0097 <span class="comment">%  mesh(xxg,yyg,uloc_i)</span>
+0098 
+0099 <span class="comment">% compute the sum</span>
+0100 
+0101 norma_loc1=sum((U-u_i).^2.*wxg)*jacx;
+0102 
+0103 <span class="keyword">if</span> errtype==0
+0104     norma_loc2=0;
+0105 <span class="keyword">else</span>
+0106     norma_loc2=sum(U.^2.*wxg)*jacx;
+0107 <span class="keyword">end</span>
+0108 
+0109 <span class="keyword">return</span>
+0110 
+0111 <a name="_sub2" href="#_subfunctions" class="code">function [norma_loc1,norma_loc2]=normal2_loc(errtype,npdx,uex,uloc,</a><span class="keyword">...</span>
+0112  xy_loc, wx,jacx); 
+0113 
+0114 <span class="comment">% LGL quadrature formulas on npdx nodes to compute L2-norm error</span>
+0115 
+0116 <span class="comment">% evaluation of exact solution at quadrature nodes.</span>
+0117 
+0118 U=uex(xy_loc);
+0119 
+0120 
+0121 <span class="comment">% compute the sum</span>
+0122 
+0123 norma_loc1=sum((U-uloc).^2.*wx)*jacx;
+0124 <span class="keyword">if</span> errtype==0
+0125     norma_loc2=0;
+0126 <span class="keyword">else</span>
+0127     norma_loc2=sum(U.^2.*wx)*jacx;
+0128 <span class="keyword">end</span>
+0129 
+0130 <span class="keyword">return</span>
+0131</pre></div>
+<hr><address>Generated on Fri 21-Sep-2007 10:07:00 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/">m2html</a></strong> &copy; 2003</address>
+</body>
+</html>
