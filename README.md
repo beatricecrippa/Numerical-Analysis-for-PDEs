@@ -24,10 +24,8 @@ Run problem1.py, problem2.py, problem3.py and problemN1.py, problemN2.py, proble
 Before running the problems, create in your directory folders named "p1", "p2", "p3", "high/p1", "high/p2" and "high/p3" respleively, where the graphs will be saved.
 
 2. Matlab folder:
-Laplace problems solved via traditional numerical methods.
+Laplace problems solved via traditional numerical method.
 
 In the folder CG_FEM the Galerkin Finite Elements Method is applied to the three previous problems.
 Run C_Convergence_test with parameters 'Test1', 'Test2', 'Test3' respectively for the problem with smooth solution, solution with peak and solution with singularity.
 
-In the folder CHQZ_lib_1.0 the Spectral Elements Methos is applied to the three previous problems.
-Run src/SmoothFEM.m, src/PeakSEM.m and src/SingularitySEM.m for the solutions.
