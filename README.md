@@ -12,7 +12,9 @@ In problems.py classes of specific problems, derived from pdebase.py classes, ar
 - Smooth solution
 - Solution with a peak
 - Less regular solution
+
 in all the three previous cases.
+
 In particular,
 - Problem_1, ProblemPeak and ProblemBLSingularity describe the previous problems as derived from NNPDE
 - Problem_1_BD, ProblemPeak_BD and ProblemBLSingularity_BD describe the previous problems as derived from NNPDE2
