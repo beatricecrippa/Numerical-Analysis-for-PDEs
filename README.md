@@ -20,7 +20,7 @@ In particular,
 - Problem_1_BD, ProblemPeak_BD and ProblemBLSingularity_BD describe the previous problems as derived from NNPDE2
 - HighDimensionSmooth, HighDimensionPeak, HighDimensionSingularity describe the previous problems as derived from NNPDE_ND (N-dimensional version).
 
-One subnetwork works on the boundary data and one on the inner domain: the subnetwokrs are dense neural networks with tanh activation and output dimensionality 256; at each neuron the sum of square error (SSE) is minimised.
+One subnetwork works on the boundary data and one on the inner domain: the subnetwokrs are dense neural networks with tanh activation; at each neuron the sum of square error (SSE) is minimised.
 
 Run problem1.py, problem2.py, problem3.py and problemN1.py, problemN2.py, problemN3.py to get the solutions and display the approxiamtion errors.
 Before running the problems, create in your directory folders named "p1", "p2", "p3", "high/p1", "high/p2" and "high/p3" respleively, where the graphs will be saved.
