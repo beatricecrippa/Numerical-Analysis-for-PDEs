@@ -1,7 +1,0 @@
-/* Created by mdot for Matlab */
-digraph m2html {
-  call_lap_3d -> lap_3d;
-
-  call_lap_3d [URL="call_lap_3d.html"];
-  lap_3d [URL="lap_3d.html"];
-}
