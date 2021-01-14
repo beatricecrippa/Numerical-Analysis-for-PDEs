@@ -7,7 +7,7 @@ Created on Tue Aug  4 12:13:34 2020
 
 from problems import *
 
-dir = 'p2'
+dir = 'p4'
 npde = ProblemPeak_BD(64, 3, 50) # works very well
 #npde.plot_exactsol()
 #plt.show()

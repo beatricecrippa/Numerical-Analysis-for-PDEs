@@ -73,37 +73,26 @@ class ProblemPeak_BD(NNPDE2):
             assert_shape(x, (None,))
         return x
 
-		##loss function as defined in the base class (SSE)
-    # def loss_function(self):
-    #     deltah = compute_delta(self.u, self.x)
-    #     delta = self.f(self.x)
-    #     delta = tf.clip_by_value(delta, -1e2, 1e2)
-    #     deltah = tf.clip_by_value(deltah, -1e2, 1e2)
-    #     res = tf.reduce_sum((deltah - delta) ** 2)
-    #     assert_shape(res, ())
-    #     return res
-
-		#loss function defined as sum of (errors / laplacian(u))^2
+		#loss function as defined in the base class (SSE)
     def loss_function(self):
         deltah = compute_delta(self.u, self.x)
         delta = self.f(self.x)
-        # delta = tf.clip_by_value(delta, -1e2, 1e2)
-        # deltah = tf.clip_by_value(deltah, -1e2, 1e2)
-        # weight = tf.clip_by_norm(1/delta**2, 10)
-        # weight = tf.reduce_sum(delta**2)/delta**2
-        res = tf.reduce_sum( 1/deltah**2 * (deltah - delta) ** 2)
+        delta = tf.clip_by_value(delta, -1e2, 1e2)
+        deltah = tf.clip_by_value(deltah, -1e2, 1e2)
+        res = tf.reduce_sum((deltah - delta) ** 2)
         assert_shape(res, ())
         return res
 
+
     def exactsol(self, x, y):
-        return np.exp(-self.alpha*((x-self.xc)**2+(y-self.yc)**2)) + np.sin(np.pi * x)
+        return np.exp(-self.alpha*((x-self.xc)**2+(y-self.yc)**2))
 
     def tfexactsol(self, x):
-        return tf.exp(-1000 * ((x[:,0] - self.xc) ** 2 + (x[:,1] - self.yc) ** 2))+ tf.sin(np.pi * x[:,0])
+        return tf.exp(-1000 * ((x[:,0] - self.xc) ** 2 + (x[:,1] - self.yc) ** 2))
 
     def f(self, x):
         return -4*self.alpha*self.tfexactsol(self.x) + 4*self.alpha**2*self.tfexactsol(self.x)* \
-                                                       ((x[:, 0] - self.xc) ** 2 + (x[:, 1] - self.yc) ** 2) - np.pi**2 * tf.sin(np.pi * x[:,0])
+                                                       ((x[:, 0] - self.xc) ** 2 + (x[:, 1] - self.yc) ** 2) 
 
     def train(self, sess, i=-1):
         # self.X = rectspace(0,0.5,0.,0.5,self.n)
@@ -300,11 +289,21 @@ class HighDimensionPeak(NNPDE_ND):
         return np.exp(-1000 * (np.sum((x - 0.5) **2)))
 
     def f(self, x):
-        return -4*1000*self.tfexactsol(x) + 4*1000**2*self.tfexactsol(x)* \
+        return -4*1000*tf.exp(-1000 * (tf.reduce_sum((x - 0.5) **2))) + 4*1000**2*tf.exp(-1000 * (tf.reduce_sum((x - 0.5) **2)))* \
                                                        tf.reduce_sum((x - 0.5) ** 2)
 																											 
     def B(self, x):
         return tf.reduce_prod(x*(1-x),axis=1)
+			
+		#loss function as defined in the base class (SSE)
+    def loss_function(self):
+        deltah = compute_delta(self.u, self.x)
+        delta = self.f(self.x)
+        delta = tf.clip_by_value(delta, -1e2, 1e2)
+        deltah = tf.clip_by_value(deltah, -1e2, 1e2)
+        res = tf.reduce_sum((deltah - delta) ** 2)
+        assert_shape(res, ())
+        return res
 
     def train(self, sess, i):
         self.rbloss = []
@@ -347,13 +346,23 @@ class HighDimensionSingularity(NNPDE_ND):
         return tf.pow(x[:,1],0.6)
 
     def exactsol(self, x):
-        return x**0.6
+        return x[:,1]**0.6
 
     def f(self, x):
         return 0.6*(0.6-1)*x[:,1]**(0.6-2)
 																											 
     def B(self, x):
         return tf.reduce_prod(x*(1-x),axis=1)
+
+		#loss function as defined in the base class (SSE)
+    def loss_function(self):
+        deltah = compute_delta(self.u, self.x)
+        delta = self.f(self.x)
+        delta = tf.clip_by_value(delta, -1e2, 1e2)
+        deltah = tf.clip_by_value(deltah, -1e2, 1e2)
+        res = tf.reduce_sum((deltah - delta) ** 2)
+        assert_shape(res, ())
+        return res
 
     def train(self, sess, i):
         self.rbloss = []

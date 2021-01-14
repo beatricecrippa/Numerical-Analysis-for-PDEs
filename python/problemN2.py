@@ -11,9 +11,9 @@ from matplotlib import pyplot as plt
 
 dir = './high/p2/'
 
-layers = np.array ([1, 2, 3])				 #modify the number of layers and see what happens for different dimensions
+layers = np.array ([1,2,3])				 #modify the number of layers and see what happens for different dimensions
 
-for dim in [2, 5, 7]:			 #loop on different dimensions
+for dim in [2,5,7]:			 #loop on different dimensions
 
     rblossFull = []
     rlossFull = []
@@ -37,12 +37,13 @@ for dim in [2, 5, 7]:			 #loop on different dimensions
                 rloss.append(npde.rloss)
                 rl2.append(npde.rl2)
 								
-        print(rbloss)
+#        print(rbloss)
 #        plt.close('all')
 #        plt.figure(1)			
 #        plt.xlabel('Iteration')
 #        plt.ylabel('$L_b$' + layer)
 #        plt.savefig(dir + '/lb.png')
+				
 				
         tf.reset_default_graph()
         rblossFull.append(rbloss)
